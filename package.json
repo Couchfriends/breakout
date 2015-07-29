@@ -1,0 +1,17 @@
+{
+  "name": "Breakout",
+  "version": "0.0.1",
+  "description": "A multiplayer breakout version in HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathieu de Ruiter <couchfriends.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "less-plugin-clean-css": "^1.5.0"
+  }
+}
