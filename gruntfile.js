@@ -9,6 +9,13 @@ module.exports = function(grunt) {
             },
             build: {
                 src: [
+                    'src/pixi.js',
+                    'src/matter.js',
+                    'src/BreakOut.js',
+                    'src/BreakOut.Element.js',
+                    'src/BreakOut.Ball.js',
+                    'src/BreakOut.Paddle.js',
+                    'src/BreakOut.Brick.js',
                     'src/game.js'
                 ],
                 dest: 'build/game.js'
