@@ -44,16 +44,40 @@ function init() {
 
     requestAnimationFrame(update);
 
-    for (var i = 0; i < 300; i++) {
+    for (var i = 0; i < 250; i++) {
         var ball = new BreakOut.Ball({radius: 15});
         ball.object.position.x = Math.random() * w;
         ball.object.position.y = Math.random() * h;
         ball.add();
     }
+    var ball = new BreakOut.Ball({radius: 15});
+    ball.object.position.x = 350;
+    ball.object.position.y = 300;
+    ball.add();
+    var ball = new BreakOut.Ball({radius: 15});
+    ball.object.position.x = 320;
+    ball.object.position.y = 200;
+    ball.add();
+    var ball = new BreakOut.Ball({radius: 15});
+    ball.object.position.x = 10;
+    ball.object.position.y = 60;
+    ball.add();
     var paddle = new BreakOut.Paddle();
     paddle.add();
     paddle.object.position.x = 600;
     paddle.object.position.y = 600;
+    var paddle = new BreakOut.Paddle();
+    paddle.add();
+    paddle.object.position.x = 200;
+    paddle.object.position.y = 350;
+    var paddle = new BreakOut.Paddle();
+    paddle.add();
+    paddle.object.position.x = 900;
+    paddle.object.position.y = 450;
+    var paddle = new BreakOut.Paddle();
+    paddle.add();
+    paddle.object.position.x = 1600;
+    paddle.object.position.y = 60;
     //var brick = new BreakOut.Brick();
     //brick.add();
     //var brick = new BreakOut.Brick();

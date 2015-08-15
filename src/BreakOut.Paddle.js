@@ -40,9 +40,9 @@ BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
 BreakOut.Paddle.prototype.init = function (settings) {
 
     this.object = new PIXI.Graphics();
-    this.object.beginFill(0xff9900, 1);
-    this.object.drawRect(0, 0, 200, 10);
-    this.object.pivot.x = .5;
-    this.object.pivot.y = .5;
+    this.object.beginFill(0x00ff00, 1);
+    this.object.drawRect(0, 0, 100, 10);
+    this.object.pivot.x = 50;
+    this.object.pivot.y = 5;
 
 };

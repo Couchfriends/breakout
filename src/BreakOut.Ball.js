@@ -55,19 +55,43 @@ BreakOut.Ball.prototype.init = function (settings) {
 
     this.object = new PIXI.Graphics();
     this.object.beginFill(0xff9900, 1);
-    this.object.drawCircle(0, 0, settings.radius || 15);
-    this.object.pivot.x = .5;
-    this.object.pivot.y = .5;
-
+    var radius = settings.radius || 15;
+    this.object.drawCircle(0, 0, radius);
 };
 
 BreakOut.Ball.prototype.collision = function (target) {
 
     // Get the direction of the bounce
     if (target.name == 'paddle') {
+        var paddle = target;
+        if (paddle.object.position.y > this.object.position.y) {
+            this.stats.speed.y = -(this.stats.speed.y);
+        }
+        else {
+            this.stats.speed.y = Math.abs(this.stats.speed.y);
+        }
+
+        // Calculate the speed of x
+        var collisionX = Math.abs((paddle.object.position.x - (paddle.object.width / 2)) - (this.object.position.x - (this.object.width / 2)));
+        var percentX = 100 / paddle.object.width * collisionX;
+        if (percentX < 10) {
+            this.stats.speed.x = -(this.stats.maxSpeed.x);
+        }
+        else if (percentX > 90) {
+            this.stats.speed.x = this.stats.maxSpeed.x;
+        }
+        else if (percentX < 25) {
+            this.stats.speed.x = (5 / 100 * percentX) - 5;
+        }
+        else if (percentX > 75) {
+            this.stats.speed.x = -((5 / 100 * percentX) - 5);
+        }
+
+        this.object.position.y += this.stats.speed.y;
+
     }
 
-    if (target.name == 'ball') {
+    else if (target.name == 'ball') {
 
         var ball2 = target;
 

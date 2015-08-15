@@ -117,18 +117,20 @@ BreakOut.Element.prototype = {
                 continue;
             }
             if (object.object.hitArea != null) {
+                var halfWidth = (this.object.width / 2);
+                var halfHeight = (this.object.height / 2);
                 // Get bounds, not just the center
-                var minX = this.object.position.x - (object.object.position.x - (this.object.width / 2));
-                var minY = this.object.position.y - (object.object.position.y - (this.object.height / 2));
+                var minX = this.object.position.x - (object.object.position.x - halfWidth);
+                var minY = this.object.position.y - (object.object.position.y - halfHeight);
 
-                var maxX = this.object.position.x - (object.object.position.x + (this.object.width / 2));
-                var maxY = this.object.position.y - (object.object.position.y + (this.object.height / 2));
+                var maxX = this.object.position.x - (object.object.position.x + halfWidth);
+                var maxY = this.object.position.y - (object.object.position.y + halfHeight);
                 if (object.object.hitArea.contains(minX, minY) || object.object.hitArea.contains(minX, maxY) || object.object.hitArea.contains(maxX, minY) || object.object.hitArea.contains(maxX, maxY)) {
                     return object;
                 }
 
-                var x = this.object.position.x - (object.object.position.x - (object.size.width / 2));
-                var y = this.object.position.y - (object.object.position.y - (object.size.height / 2));
+                var x = this.object.position.x - (object.object.position.x - halfWidth);
+                var y = this.object.position.y - (object.object.position.y - halfHeight);
                 if (object.object.hitArea.contains(x, y)) {
                     return object;
                 }
