@@ -33,16 +33,17 @@ BreakOut.Paddle = function () {
 
     this.name = 'paddle';
 
+    this.texture = 'paddle001.png';
+
 };
 
 BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
 
 BreakOut.Paddle.prototype.init = function (settings) {
 
-    this.object = new PIXI.Graphics();
-    this.object.beginFill(0x00ff00, 1);
-    this.object.drawRect(0, 0, 100, 10);
-    this.object.pivot.x = 50;
-    this.object.pivot.y = 5;
+    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
+    this.object = new PIXI.Sprite(this.texture);
+    this.object.anchor.x = .5;
+    this.object.anchor.y = .5;
 
 };

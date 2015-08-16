@@ -42,11 +42,7 @@ BreakOut.Element = function (settings) {
         y: 0
     };
 
-    /**
-     * Matter body
-     * @type {Object}
-     */
-    this.body = {};
+    this.object = {};
 
     this.hitArea = null;
 

@@ -33,19 +33,21 @@ BreakOut.Ball = function (settings) {
 
     this.name = 'ball';
 
+    this.texture = 'ball.png';
+
     this.stats = {
-        radius: settings.radius || 15,
+        radius: settings.radius || 11,
         prevPosition: {
             x: 0,
             y: 0
         },
         speed: {
-            x: -5,
-            y: 5
+            x: -3,
+            y: 3
         },
         maxSpeed: {
-            x: 5,
-            y: 5
+            x: 3,
+            y: 3
         }
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
@@ -54,12 +56,13 @@ BreakOut.Ball = function (settings) {
 
 BreakOut.Ball.prototype = Object.create(BreakOut.Element.prototype);
 
+BreakOut.Ball.prototype.init = function (settings) {
 
-BreakOut.Ball.prototype.init = function () {
+    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
+    this.object = new PIXI.Sprite(this.texture);
+    this.object.anchor.x = .5;
+    this.object.anchor.y = .5;
 
-    this.object = new PIXI.Graphics();
-    this.object.beginFill(0xff9900, 1);
-    this.object.drawCircle(0, 0, this.stats.radius);
 };
 
 BreakOut.Ball.prototype.collision = function (target) {
@@ -68,6 +71,7 @@ BreakOut.Ball.prototype.collision = function (target) {
     if (target.name == 'paddle' || target.name == 'brick') {
 
         var adjustSpeed = false;
+        var speed = this.stats.speed;
         var pos = this.object.position;
         var posTarget = target.object.position;
         var halfWidth = this.object.width / 2;
@@ -76,25 +80,28 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfHeightTarget = target.object.height / 2;
 
         if (pos.x < (posTarget.x - halfWidthTarget)) {
-            this.stats.speed.x *= -1;
+            speed.x *= -1;
             pos.x = (posTarget.x - halfWidthTarget) - halfWidth;
         }
         else if (pos.x > (posTarget.x + halfWidthTarget)) {
-            this.stats.speed.x *= -1;
+            speed.x *= -1;
             pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
         }
         else if (pos.y < (posTarget.y - halfHeightTarget)) {
             adjustSpeed = true;
-            this.stats.speed.y *= -1;
+            speed.y *= -1;
             pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
         }
         else {
             adjustSpeed = true;
-            this.stats.speed.y *= -1;
+            speed.y *= -1;
             pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
         }
         if (target.name == 'paddle' && adjustSpeed == true) {
-            var xPosRelative = pos.x
+            var xPosRelative = posTarget.x - pos.x;
+            var percent = 100 / halfWidthTarget * xPosRelative;
+            speed.x = this.stats.maxSpeed.x / 100 * percent;
+            speed.x *= -1;
         }
         if (0) {
             // Speed velocity for paddle
