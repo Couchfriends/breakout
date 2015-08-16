@@ -89,31 +89,6 @@ BreakOut.Ball.prototype.collision = function (target) {
         if (target.name == 'paddle' && adjustSpeed == true) {
             var xPosRelative = this.object.position.x
         }
-
-        var dx = target.object.position.x - this.object.position.x;
-        var dy = target.object.position.y - this.object.position.y;
-
-        //if(this.object.position.x < target.object.position.x) {
-        //    dx -= this.object.width;
-        //} else {
-        //    dx += target.object.width;
-        //}
-        //
-        //if(this.object.position.y < target.object.position.y) {
-        //    dy -= this.object.height;
-        //} else {
-        //    dy += target.object.height;
-        //}
-
-        //if(Math.abs(dx) < Math.abs(dy)) {
-        //    this.stats.speed.x *= -1;
-        //    //this.object.position.x = this.prevPosition.x + this.stats.speed.x;
-        //} else {
-        //    this.stats.speed.y *= -1;
-        //    //this.object.position.y = this.prevPosition.y + this.stats.speed.y;
-        //}
-
-
         if (0) {
             // Speed velocity for paddle
             var magnitude = (this.distanceTo(paddle) - this.size.y / 2 - paddle.size.y / 2);
@@ -126,93 +101,6 @@ BreakOut.Ball.prototype.collision = function (target) {
 
             return this.speed * ratio;
         }
-        if (0) {
-            if (this.object.position.y <= target.object.position.y - (target.object.height / 2)) {
-                console.log('bottom');
-                this.stats.speed.y = Math.abs(this.stats.speed.y);
-            }
-            else if (this.object.position.y >= target.object.position.y + (target.object.height / 2)) {
-                console.log('top');
-                this.stats.speed.y = -(Math.abs(this.stats.speed.y));
-            }
-            if (this.object.position.x < target.object.position.x) {
-                console.log('left');
-                this.stats.speed.x = -(Math.abs(this.stats.speed.x));
-            }
-            else if (this.object.position.x > target.object.position.x) {
-                console.log('right');
-                this.stats.speed.x = Math.abs(this.stats.speed.x);
-            }
-        }
-        if (0) {
-            var targetHalfWidth = target.object.width / 2;
-            var ballHalfWidth = this.object.width / 2;
-            var targetHalfHeight = target.object.height / 2;
-            var ballHalfHeight = this.object.height / 2;
-            var cRx = Math.abs(target.object.position.x - targetHalfWidth - this.object.position.x);
-            var cRy = Math.abs(target.object.position.y - targetHalfHeight - this.object.position.y);
-
-            var spacing = Math.max(target.object.width * .1, 10);
-            // 25 70 10
-            console.log(spacing, cRx, cRy, this.object.position.y, target.object.position.y);
-            // top left corner
-            if (cRx < spacing && cRy < spacing) {
-                console.log('top left');
-                this.stats.speed.x = -(Math.abs(this.stats.speed.x));
-                this.stats.speed.y = -(Math.abs(this.stats.speed.y));
-            }
-            // top right corner
-            else if (cRx > (targetHalfWidth + ballHalfWidth - spacing) && cRy < spacing) {
-                console.log('top right');
-                this.stats.speed.x = Math.abs(this.stats.speed.x);
-                this.stats.speed.y = -(Math.abs(this.stats.speed.y));
-            }
-            // bottom right corner
-            else if (cRx > (targetHalfWidth + ballHalfWidth - spacing) && cRy > (targetHalfHeight + ballHalfHeight - spacing)) {
-                console.log('bottom right');
-                this.stats.speed.x = Math.abs(this.stats.speed.x);
-                this.stats.speed.y = Math.abs(this.stats.speed.y);
-            }
-            // bottom left corner
-            else if (cRx < spacing && cRy > (targetHalfHeight + ballHalfHeight - spacing)) {
-                console.log('bottom left');
-                this.stats.speed.x = -(Math.abs(this.stats.speed.x));
-                this.stats.speed.y = Math.abs(this.stats.speed.y);
-            }
-            // left
-            else if (cRx < cRy) {
-                console.log('left');
-                this.stats.speed.x = -(Math.abs(this.stats.speed.x));
-            }
-            // right
-            else if (cRx > cRy && !((cRy < targetHalfHeight || target.object.position.y > this.object.position.y))) {
-                console.log('right');
-                this.stats.speed.x = Math.abs(this.stats.speed.x);
-            }
-            // top or bottom
-            else {
-                if (cRy < targetHalfHeight || target.object.position.y > this.object.position.y) {
-                    console.log('top');
-                    this.stats.speed.y = -(Math.abs(this.stats.speed.y));
-                }
-                else {
-                    console.log('bottom');
-                    this.stats.speed.y = Math.abs(this.stats.speed.y);
-                }
-
-                if (target.name == 'paddle') {
-                    var percentX = 100 / target.object.width * cRx;
-                    if (percentX < 40) {
-                        this.stats.speed.x = (this.stats.speed.x / 100 * percentX);
-                    }
-                    else if (percentX > 60) {
-                        this.stats.speed.x = -(this.stats.speed.x / 100 * percentX);
-                    }
-                }
-            }
-        }
-
-
     }
 
     if (target.name == 'ball') {
