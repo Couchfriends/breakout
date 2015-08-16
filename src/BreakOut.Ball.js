@@ -68,26 +68,33 @@ BreakOut.Ball.prototype.collision = function (target) {
     if (target.name == 'paddle' || target.name == 'brick') {
 
         var adjustSpeed = false;
-        if (this.object.position.x < (target.object.position.x - (target.object.width / 2))) {
+        var pos = this.object.position;
+        var posTarget = target.object.position;
+        var halfWidth = this.object.width / 2;
+        var halfHeight = this.object.height / 2;
+        var halfWidthTarget = target.object.width / 2;
+        var halfHeightTarget = target.object.height / 2;
+
+        if (pos.x < (posTarget.x - halfWidthTarget)) {
             this.stats.speed.x *= -1;
-            this.object.position.x = (target.object.position.x - (target.object.width / 2)) - (this.object.width / 2);
+            pos.x = (posTarget.x - halfWidthTarget) - halfWidth;
         }
-        else if (this.object.position.x > (target.object.position.x + (target.object.width / 2))) {
+        else if (pos.x > (posTarget.x + halfWidthTarget)) {
             this.stats.speed.x *= -1;
-            this.object.position.x = (target.object.position.x + (target.object.width / 2)) + (this.object.width / 2);
+            pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
         }
-        else if (this.object.position.y < (target.object.position.y - (target.object.height / 2))) {
+        else if (pos.y < (posTarget.y - halfHeightTarget)) {
             adjustSpeed = true;
             this.stats.speed.y *= -1;
-            this.object.position.y = (target.object.position.y - (target.object.height / 2)) - (this.object.height / 2);
+            pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
         }
         else {
             adjustSpeed = true;
             this.stats.speed.y *= -1;
-            this.object.position.y = (target.object.position.y + (target.object.height / 2)) + (this.object.height / 2);
+            pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
         }
         if (target.name == 'paddle' && adjustSpeed == true) {
-            var xPosRelative = this.object.position.x
+            var xPosRelative = pos.x
         }
         if (0) {
             // Speed velocity for paddle
@@ -143,22 +150,29 @@ BreakOut.Ball.prototype.update = function (time) {
     if (!BreakOut.Element.prototype.update.call(this, time)) {
         return false;
     }
-    this.object.position.x += this.stats.speed.x;
-    this.object.position.y += this.stats.speed.y;
-    if (this.object.position.y > (BreakOut.settings.height - this.stats.radius)) {
-        this.stats.speed.y = -this.stats.speed.y;
-        this.object.position.y = (BreakOut.settings.height - this.stats.radius);
+
+    var pos = this.object.position;
+    var radius = this.stats.radius;
+    var speed = this.stats.speed;
+    var settings = BreakOut.settings;
+
+    pos.x += speed.x;
+    pos.y += speed.y;
+
+    if (pos.y > (settings.height - radius)) {
+        speed.y = -speed.y;
+        pos.y = (settings.height - radius);
     }
-    else if (this.object.position.y < this.stats.radius) {
-        this.stats.speed.y = Math.abs(this.stats.speed.y);
-        this.object.position.y = this.stats.radius;
+    else if (pos.y < radius) {
+        speed.y = Math.abs(speed.y);
+        pos.y = radius;
     }
-    if (this.object.position.x > (BreakOut.settings.width - this.stats.radius)) {
-        this.stats.speed.x = -this.stats.speed.x;
-        this.object.position.x = (BreakOut.settings.width - this.stats.radius);
+    else if (pos.x > (settings.width - radius)) {
+        speed.x = -speed.x;
+        pos.x = (settings.width - radius);
     }
-    if (this.object.position.x < this.stats.radius) {
-        this.stats.speed.x = Math.abs(this.stats.speed.x);
-        this.object.position.x = this.stats.radius;
+    else if (pos.x < radius) {
+        speed.x = Math.abs(speed.x);
+        pos.x = radius;
     }
 };
