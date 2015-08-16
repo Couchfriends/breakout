@@ -29,7 +29,8 @@ var BreakOut = {
      */
     settings: {
         width: 1280,
-        height: 720
+        height: 720,
+        assetDir: 'assets/'
     },
     objects: [],
     update: function(time) {

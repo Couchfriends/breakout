@@ -33,14 +33,16 @@ BreakOut.Brick = function (settings) {
 
     this.name = 'brick';
 
+    this.texture = 'brick.png';
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
 
 BreakOut.Brick.prototype.init = function (settings) {
 
-    this.object = new PIXI.Graphics();
-    this.object.beginFill(0xff9900, 1);
-    this.object.drawCircle(0, 0, 15);
+    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
+    this.object = new PIXI.Sprite(this.texture);
+    this.object.anchor.x = .5;
+    this.object.anchor.y = .5;
 
 };

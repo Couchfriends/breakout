@@ -37,6 +37,11 @@ BreakOut.Element = function (settings) {
      */
     this.name = '';
 
+    this.prevPosition = {
+        x: 0,
+        y: 0
+    };
+
     /**
      * Matter body
      * @type {Object}
@@ -47,16 +52,17 @@ BreakOut.Element = function (settings) {
 
     this.collisionList = [];
 
-    this.init(settings);
+    this.texture = '';
+
 };
 
 BreakOut.Element.prototype = {
 
-    init: function (settings) {
+    init: function () {
 
         console.warn('Init not implemented on Object.', this);
         this.object = new PIXI.Graphics();
-        this.object.beginFill(0xff9900, 1);
+        this.object.beginFill(0xff0000, 1);
         this.object.drawCircle(0, 0, 15);
 
     },
@@ -74,7 +80,8 @@ BreakOut.Element.prototype = {
         if (this.object.visible == false) {
             return false
         }
-        this.object.prevPosition = this.object.position;
+        this.prevPosition.x = this.object.position.x;
+        this.prevPosition.y = this.object.position.y;
         // Do some collision detection here
         var collisionObject = this.checkCollision();
         if (collisionObject != false) {
