@@ -79,23 +79,23 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfWidthTarget = target.object.width / 2;
         var halfHeightTarget = target.object.height / 2;
 
-        if (pos.x < (posTarget.x - halfWidthTarget)) {
+        if (pos.y < (posTarget.y - halfHeightTarget)) {
+            adjustSpeed = true;
+            speed.y *= -1;
+            pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
+        }
+        else if (pos.y > (posTarget.y + halfHeightTarget)) {
+            adjustSpeed = true;
+            speed.y *= -1;
+            pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
+        }
+        else if (pos.x < (posTarget.x - halfWidthTarget)) {
             speed.x *= -1;
             pos.x = (posTarget.x - halfWidthTarget) - halfWidth;
         }
         else if (pos.x > (posTarget.x + halfWidthTarget)) {
             speed.x *= -1;
             pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
-        }
-        else if (pos.y < (posTarget.y - halfHeightTarget)) {
-            adjustSpeed = true;
-            speed.y *= -1;
-            pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
-        }
-        else {
-            adjustSpeed = true;
-            speed.y *= -1;
-            pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
         }
         if (target.name == 'paddle' && adjustSpeed == true) {
             var xPosRelative = posTarget.x - pos.x;

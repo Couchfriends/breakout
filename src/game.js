@@ -29,7 +29,7 @@ if (typeof COUCHFRIENDS == 'undefined') {
 if (typeof BreakOut == 'undefined') {
     console.warn('This game needs the BreakOut object in order to work.');
 }
-var renderer, stage, players = [];
+var renderer, stage, players = [], tmpPlayer;
 window.onload = init;
 function init() {
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 800);
@@ -37,14 +37,14 @@ function init() {
     BreakOut.settings.width = w;
     BreakOut.settings.height = h;
 
-    renderer = new PIXI.autoDetectRenderer(w, h);
+    renderer = new PIXI.autoDetectRenderer(w, h, {antialias: true});
     stage = new PIXI.Container(0x000000);
     document.getElementById('game').innerHTML = '';
     document.getElementById('game').appendChild(renderer.view);
 
     requestAnimationFrame(update);
 
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 10; i++) {
         var ball = new BreakOut.Ball({radius: 15});
         ball.init();
         ball.object.position.x = Math.random() * w;
@@ -56,21 +56,11 @@ function init() {
     ball.object.position.x = 1130;
     ball.object.position.y = 270;
     ball.add();
-    var paddle = new BreakOut.Paddle();
-    paddle.init();
-    paddle.add();
-    paddle.object.position.x = 600;
-    paddle.object.position.y = 600;
-    var paddle = new BreakOut.Paddle();
-    paddle.init();
-    paddle.add();
-    paddle.object.position.x = 200;
-    paddle.object.position.y = 350;
-    var paddle = new BreakOut.Paddle();
-    paddle.init();
-    paddle.add();
-    paddle.object.position.x = 900;
-    paddle.object.position.y = 450;
+    tmpPlayer = new BreakOut.Paddle();
+    tmpPlayer.init();
+    tmpPlayer.add();
+    tmpPlayer.object.position.x = w / 2;
+    tmpPlayer.object.position.y = h - 100;
     for (var i = 0; i < 25; i++) {
 
         var brick = new BreakOut.Brick();
@@ -79,14 +69,9 @@ function init() {
         brick.object.position.x = 100 + (i * 64);
         brick.object.position.y = 160;
     }
-    //var brick = new BreakOut.Brick();
-    //brick.add();
-    //var brick = new BreakOut.Brick();
-    //brick.add();
-    //var brick = new BreakOut.Brick();
-    //brick.add();
-    //var brick = new BreakOut.Brick();
-    //brick.add();
+    window.addEventListener('mousemove', function (e) {
+        tmpPlayer.object.position.x = e.clientX;
+    });
 }
 
 function update(time) {
