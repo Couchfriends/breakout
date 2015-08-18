@@ -27,22 +27,32 @@
  * Brick object
  * @constructor
  */
-BreakOut.BrickFire = function (settings) {
+BreakOut.AssetFire = function (settings) {
 
-    BreakOut.Brick.call(this, settings);
+    BreakOut.Asset.call(this, settings);
 
-    // Range of the explosion
-    this.range = 64;
     this.textures = [
-        'brick-fire.png'
+        'torch-001.png',
+        'torch-002.png',
+        'torch-003.png',
+        'torch-004.png',
+        'torch-005.png',
+        'torch-006.png',
+        'torch-007.png',
+        'torch-008.png',
+        'torch-009.png'
     ];
+    this.light = {};
 };
 
-BreakOut.BrickFire.prototype = Object.create(BreakOut.Brick.prototype);
+BreakOut.AssetFire.prototype = Object.create(BreakOut.Asset.prototype);
 
-BreakOut.BrickFire.prototype.damage = function (ball) {
+BreakOut.AssetFire.prototype.init = function (settings) {
 
-    BreakOut.Brick.prototype.damage.call(this, ball);
-    BreakOut.addExplosion(this.object.position, this.range);
+    BreakOut.Asset.prototype.init.call(this, settings);
+
+    var color = 0xff0000;
+    this.light = new PIXI.lights.PointLight(color, 1);
+    this.object.addChild(this.light);
 
 };

@@ -28,6 +28,9 @@ module.exports = function(grunt) {
                     'src/BreakOut.BrickFire.js',
                     'src/BreakOut.BrickIce.js',
                     'src/BreakOut.BrickSand.js',
+                    'src/BreakOut.Explosion.js',
+                    'src/BreakOut.Asset.js',
+                    'src/BreakOut.AssetFire.js',
                     'src/game.js'
                 ],
                 dest: 'build/game.js'

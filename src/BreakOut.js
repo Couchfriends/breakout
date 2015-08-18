@@ -33,9 +33,63 @@ var BreakOut = {
         assetDir: 'assets/'
     },
     objects: [],
+    /**
+     * List with batch operations to execute
+     */
+    batches: [],
     update: function(time) {
         for (var i = 0; i < this.objects.length; i++) {
             this.objects[i].update(time);
+        }
+        var batches = [];
+        var spliceIndexes = [];
+        for (var i = 0; i < this.batches.length; i++) {
+            switch (this.batches[i].type) {
+                case 'damage':
+                    this.batches[i].object.damage(this.batches[i].value);
+                    continue;
+                    break;
+                default:
+                    console.log(this.batches[i].type);
+                    continue;
+            }
+            batches.push(this.batches[i]);
+        }
+        this.batches = batches;
+    },
+    /**
+     * List with explosions that can be added to the scene
+     */
+    explosions: [],
+    addExplosion: function (pos, range) {
+
+        // find bricks in range...
+        var minX = pos.x - range;
+        var maxX = pos.x + range;
+        var minY = pos.y - range;
+        var maxY = pos.y + range;
+
+        for (var i = 0; i < this.objects.length; i++) {
+            if (this.objects[i].name != 'brick') {
+                continue;
+            }
+            if (this.objects[i].object.position.x >= minX && this.objects[i].object.position.x <= maxX &&
+                this.objects[i].object.position.y >= minY && this.objects[i].object.position.y <= maxY) {
+                this.batches.push({
+                    type: 'damage',
+                    object: this.objects[i],
+                    value: Infinity
+                });
+            }
+        }
+
+        for (var i = 0; i < this.explosions.length; i++) {
+            if (this.explosions[i].object.visible == false) {
+                this.explosions[i].object.position.x = pos.x;
+                this.explosions[i].object.position.y = pos.y;
+                this.explosions[i].object.visible = true;
+                break;
+            }
         }
     }
 };
