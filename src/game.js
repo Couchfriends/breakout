@@ -43,28 +43,59 @@ function init() {
     renderer = new PIXI.lights.WebGLDeferredRenderer(w, h, {transparent: true});
 
     stage = new PIXI.Container();
-    light = new PIXI.lights.PointLight(0xffffff, 1);
-    stage.addChild(light);
     document.getElementById('game').innerHTML = '';
     document.getElementById('game').appendChild(renderer.view);
 
-    for (var i = 0; i < 5; i++) {
-        var ball = new BreakOut.Ball({radius: 15});
-        ball.init();
-        ball.object.position.x = Math.random() * 10;
-        ball.object.position.y = h - 250 + (Math.random() * 50);
-        ball.add();
-    }
-    tmpPlayer = new BreakOut.Paddle();
-    tmpPlayer.init();
-    tmpPlayer.add();
-    tmpPlayer.object.position.x = w / 2;
-    tmpPlayer.object.position.y = h - 150;
 
     // Levels are build for 1280x520 (720 - (2 * 100)) resolutions. Let's make sure the level is
     // rendered in the center
     ajax(BreakOut.settings.assetDir + 'level001.json', function (jsonData) {
         jsonData = JSON.parse(jsonData);
+
+
+        var backgroundWidth = 256;
+        var backgroundHeight = 256;
+        for (var x = 0; x < BreakOut.settings.width; x += backgroundWidth) {
+
+            for (var y = 0; y < BreakOut.settings.height; y += backgroundHeight) {
+                var background = new BreakOut.AssetBackground();
+                background.init();
+                background.add();
+                background.object.position.x = x;
+                background.object.position.y = y;
+            }
+        }
+
+
+        // Bottom wall
+        var decoI = 32;
+        var rightPos = BreakOut.settings.width;
+        var heightPos = BreakOut.settings.height - 42;
+
+        var settings = {
+            texture: 'brickdeco002.png',
+            normalTexture: 'brickdeco002-normal.png'
+        };
+        while (decoI < rightPos) {
+            var DecoBrick = new BreakOut.BrickDeco(settings);
+            DecoBrick.init();
+            DecoBrick.add();
+            DecoBrick.object.position.x = decoI;
+            DecoBrick.object.position.y = heightPos;
+            decoI += 64;
+        }
+        for (var i = 0; i < 5; i++) {
+            var ball = new BreakOut.Ball({radius: 15});
+            ball.init();
+            ball.object.position.x = Math.random() * 10;
+            ball.object.position.y = h - 250 + (Math.random() * 50);
+            ball.add();
+        }
+        tmpPlayer = new BreakOut.Paddle();
+        tmpPlayer.init();
+        tmpPlayer.add();
+        tmpPlayer.object.position.x = w / 2;
+        tmpPlayer.object.position.y = h - 150;
 
         var tileWidth = jsonData.tilewidth;
         var tileHeight = jsonData.tileheight;
@@ -164,24 +195,6 @@ function init() {
         fire.object.position.x = BreakOut.settings.width - 64;
         fire.object.position.y = BreakOut.settings.height - 102;
     });
-
-    // Bottom wall
-    var decoI = 32;
-    var rightPos = BreakOut.settings.width;
-    var heightPos = BreakOut.settings.height - 42;
-
-    var settings = {
-        texture: 'brickdeco002.png',
-        normalTexture: 'brickdeco002-normal.png'
-    };
-    while (decoI < rightPos) {
-        var DecoBrick = new BreakOut.BrickDeco(settings);
-        DecoBrick.init();
-        DecoBrick.add();
-        DecoBrick.object.position.x = decoI;
-        DecoBrick.object.position.y = heightPos;
-        decoI += 64;
-    }
 
     window.addEventListener('mousemove', function (e) {
         tmpPlayer.object.position.x = e.clientX;
