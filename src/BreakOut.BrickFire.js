@@ -24,31 +24,16 @@
  */
 
 /**
- * Ball object
+ * Brick object
  * @constructor
  */
-BreakOut.Paddle = function () {
+BreakOut.BrickFire = function (settings) {
 
-    BreakOut.Element.call(this);
+    BreakOut.Brick.call(this, settings);
 
-    this.name = 'paddle';
-
-    this.texture = 'paddle001.png';
-
+    this.textures = [
+        'brick-fire.png'
+    ];
 };
 
-BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
-
-BreakOut.Paddle.prototype.init = function (settings) {
-
-    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
-    this.object = new PIXI.Sprite(this.texture);
-    //var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + "brick-normal.png");
-    //this.object.normalTexture = normalMapTexture;
-    this.object.anchor.x = .5;
-    this.object.anchor.y = .5;
-    var color = 0xffe227;
-    var ballLight = new PIXI.lights.PointLight(color, 1);
-    this.object.addChild(ballLight);
-
-};
+BreakOut.BrickFire.prototype = Object.create(BreakOut.Brick.prototype);

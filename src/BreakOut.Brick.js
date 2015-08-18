@@ -33,16 +33,42 @@ BreakOut.Brick = function (settings) {
 
     this.name = 'brick';
 
-    this.texture = 'brick.png';
+    /**
+     * list of textures. Start with the latest and move up to the first. Then it
+     * get destroyed
+     * @type {string[]}
+     */
+    this.textures = [
+        'brick.png'
+    ];
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
 
 BreakOut.Brick.prototype.init = function (settings) {
 
-    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
-    this.object = new PIXI.Sprite(this.texture);
+    for (var i = 0; i < this.textures.length; i++) {
+        this.textures[i] = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.textures[i]);
+    }
+    this.object = new PIXI.Sprite();
+    this.object.texture = this.textures[this.textures.length - 1];
+    //var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + "brick-normal.png");
+    //this.object.normalTexture = normalMapTexture;
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
+
+};
+
+BreakOut.Brick.prototype.damage = function (ball) {
+
+    var damage = 1;
+    var newTexture = this.textures.indexOf(this.object.texture) - damage;
+    if (typeof this.textures[newTexture] == 'undefined') {
+        this.remove();
+    }
+    else {
+        // Probably a bug with the light plugin?
+        this.object._originalTexture = this.textures[newTexture];
+    }
 
 };

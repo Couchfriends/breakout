@@ -24,31 +24,36 @@
  */
 
 /**
- * Ball object
+ * Brick object
  * @constructor
  */
-BreakOut.Paddle = function () {
+BreakOut.BrickDeco = function (settings) {
 
-    BreakOut.Element.call(this);
+    BreakOut.Brick.call(this, settings);
 
-    this.name = 'paddle';
+    settings = settings || {};
+    settings.texture = settings.texture || 'brickdeco001.png';
+    settings.normalTexture = settings.normalTexture || 'brickdeco001-normal.png';
 
-    this.texture = 'paddle001.png';
+    this.name = 'brick';
+
+    this.texture = settings.texture;
+    this.normalTexture = settings.normalTexture;
+};
+
+BreakOut.BrickDeco.prototype = Object.create(BreakOut.Brick.prototype);
+
+BreakOut.BrickDeco.prototype.init = function (settings) {
+
+    var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
+    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
+    this.object = new PIXI.Sprite(this.texture);
+    this.object.normalTexture = normalMapTexture;
+    this.object.anchor.x = .5;
+    this.object.anchor.y = .5;
 
 };
 
-BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
-
-BreakOut.Paddle.prototype.init = function (settings) {
-
-    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
-    this.object = new PIXI.Sprite(this.texture);
-    //var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + "brick-normal.png");
-    //this.object.normalTexture = normalMapTexture;
-    this.object.anchor.x = .5;
-    this.object.anchor.y = .5;
-    var color = 0xffe227;
-    var ballLight = new PIXI.lights.PointLight(color, 1);
-    this.object.addChild(ballLight);
+BreakOut.BrickDeco.prototype.damage = function (ball) {
 
 };

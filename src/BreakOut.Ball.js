@@ -36,18 +36,18 @@ BreakOut.Ball = function (settings) {
     this.texture = 'ball.png';
 
     this.stats = {
-        radius: settings.radius || 11,
+        radius: settings.radius || 16,
         prevPosition: {
             x: 0,
             y: 0
         },
         speed: {
-            x: -3,
-            y: 3
+            x: -2,
+            y: 2
         },
         maxSpeed: {
-            x: 3,
-            y: 3
+            x: 2,
+            y: 2
         }
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
@@ -62,6 +62,14 @@ BreakOut.Ball.prototype.init = function (settings) {
     this.object = new PIXI.Sprite(this.texture);
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
+
+    var color = 0xffffff;
+    //this.object = new PIXI.Graphics();
+    //this.object.beginFill(color, 1);
+    //this.object.drawCircle(0, 0, this.stats.radius);
+
+    var ballLight = new PIXI.lights.PointLight(color, 1);
+    this.object.addChild(ballLight);
 
 };
 
@@ -97,6 +105,15 @@ BreakOut.Ball.prototype.collision = function (target) {
             speed.x *= -1;
             pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
         }
+        else {
+            // probably stuck inside due speed
+            if (speed.y > 0) {
+                pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
+            }
+            else {
+                pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
+            }
+        }
         if (target.name == 'paddle' && adjustSpeed == true) {
             var xPosRelative = posTarget.x - pos.x;
             var percent = 100 / halfWidthTarget * xPosRelative;
@@ -114,6 +131,9 @@ BreakOut.Ball.prototype.collision = function (target) {
             }
 
             return this.speed * ratio;
+        }
+        if (target.name == 'brick') {
+            target.damage(this);
         }
     }
 
@@ -136,19 +156,31 @@ BreakOut.Ball.prototype.collision = function (target) {
             ball2.stats.speed.x += ax;
             ball2.stats.speed.y += ay;
         }
-        if (this.stats.speed.x > this.stats.maxSpeed.x) {
-            this.stats.speed.x = this.stats.maxSpeed.x;
-        }
-        else if (this.stats.speed.x < -(this.stats.maxSpeed.x)) {
-            this.stats.speed.x = -(this.stats.maxSpeed.x);
-        }
-        if (this.stats.speed.y > this.stats.maxSpeed.y) {
-            this.stats.speed.y = this.stats.maxSpeed.y;
-        }
-        else if (this.stats.speed.y < -(this.stats.maxSpeed.y)) {
-            this.stats.speed.y = -(this.stats.maxSpeed.y);
-        }
 
+        if (target.stats.speed.x > target.stats.maxSpeed.x) {
+            target.stats.speed.x = target.stats.maxSpeed.x;
+        }
+        else if (target.stats.speed.x < -(target.stats.maxSpeed.x)) {
+            target.stats.speed.x = -(target.stats.maxSpeed.x);
+        }
+        if (target.stats.speed.y > target.stats.maxSpeed.y) {
+            target.stats.speed.y = target.stats.maxSpeed.y;
+        }
+        else if (target.stats.speed.y < -(target.stats.maxSpeed.y)) {
+            target.stats.speed.y = -(target.stats.maxSpeed.y);
+        }
+    }
+    if (this.stats.speed.x > this.stats.maxSpeed.x) {
+        this.stats.speed.x = this.stats.maxSpeed.x;
+    }
+    else if (this.stats.speed.x < -(this.stats.maxSpeed.x)) {
+        this.stats.speed.x = -(this.stats.maxSpeed.x);
+    }
+    if (this.stats.speed.y > this.stats.maxSpeed.y) {
+        this.stats.speed.y = this.stats.maxSpeed.y;
+    }
+    else if (this.stats.speed.y < -(this.stats.maxSpeed.y)) {
+        this.stats.speed.y = -(this.stats.maxSpeed.y);
     }
 };
 

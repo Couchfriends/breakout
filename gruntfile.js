@@ -10,11 +10,24 @@ module.exports = function(grunt) {
             build: {
                 src: [
                     'src/pixi.js',
+                    'src/pixi.lights.js',
+                    'src/lib.js',
+                    'src/randomcolor.js',
                     'src/BreakOut.js',
                     'src/BreakOut.Element.js',
                     'src/BreakOut.Ball.js',
                     'src/BreakOut.Paddle.js',
                     'src/BreakOut.Brick.js',
+                    'src/BreakOut.BrickDeco.js',
+                    'src/BreakOut.BrickStone.js',
+                    'src/BreakOut.BrickFourStones.js',
+                    'src/BreakOut.BrickColorOrange.js',
+                    'src/BreakOut.BrickColorRed.js',
+                    'src/BreakOut.BrickColorPurple.js',
+                    'src/BreakOut.BrickStar.js',
+                    'src/BreakOut.BrickFire.js',
+                    'src/BreakOut.BrickIce.js',
+                    'src/BreakOut.BrickSand.js',
                     'src/game.js'
                 ],
                 dest: 'build/game.js'
