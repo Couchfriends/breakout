@@ -42,12 +42,12 @@ BreakOut.Ball = function (settings) {
             y: 0
         },
         speed: {
-            x: -2,
-            y: 2
+            x: -4,
+            y: 4
         },
         maxSpeed: {
-            x: 2,
-            y: 2
+            x: 4,
+            y: 4
         }
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
