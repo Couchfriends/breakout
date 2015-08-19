@@ -34,6 +34,7 @@ BreakOut.BrickColorRed = function (settings) {
     this.textures = [
         'brick-color-red.png'
     ];
+    this.score = 20;
 };
 
 BreakOut.BrickColorRed.prototype = Object.create(BreakOut.Brick.prototype);

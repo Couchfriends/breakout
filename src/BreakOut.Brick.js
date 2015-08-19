@@ -82,6 +82,14 @@ BreakOut.Brick.prototype.damage = function (ball, damage) {
     this.team = ball.team;
     var newTexture = this.textures.indexOf(this.object.texture) - damage;
     if (typeof this.textures[newTexture] == 'undefined') {
+        BreakOut.addScore(
+            ball.team,
+            this.score,
+            {
+                x: this.object.position.x,
+                y: this.object.position.y
+            }
+        );
         this.remove();
     }
     else {

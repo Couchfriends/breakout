@@ -34,6 +34,16 @@ BreakOut.BrickStar = function (settings) {
     this.textures = [
         'brick-star.png'
     ];
+    this.score = 200;
+
+    this.bonuses = [
+        'bonus-coin'
+    ];
+    /**
+     * Drop chance in percent
+     * @type {number}
+     */
+    this.dropChance = 100;
 };
 
 BreakOut.BrickStar.prototype = Object.create(BreakOut.Brick.prototype);

@@ -39,6 +39,10 @@ BreakOut.Paddle = function () {
 
     this.texture = 'paddle001.png';
 
+    this.speed = {
+        x: 0
+    };
+
 };
 
 BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
@@ -55,4 +59,25 @@ BreakOut.Paddle.prototype.init = function (settings) {
     this.object.tint = this.color;
     this.object.addChild(ballLight);
 
+};
+
+BreakOut.Paddle.prototype.setSpeed = function (x) {
+
+    this.speed.x = x;
+
+};
+
+BreakOut.Paddle.prototype.update = function (time) {
+
+    if (!BreakOut.Element.prototype.update.call(this, time)) {
+        return false;
+    }
+    this.object.position.x += this.speed.x;
+    if (this.object.position.x < 0) {
+        this.object.position.x = 0;
+    }
+    if (this.object.position.x > BreakOut.settings.width) {
+        this.object.position.x = BreakOut.settings.width;
+    }
+    return true;
 };

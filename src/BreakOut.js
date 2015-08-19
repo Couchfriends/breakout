@@ -28,6 +28,7 @@ var BreakOut = {
      * Game width and height
      */
     settings: {
+        debug: false,
         width: 1280,
         height: 720,
         assetDir: 'assets/',
@@ -47,6 +48,9 @@ var BreakOut = {
      */
     batches: [],
     update: function(time) {
+        if (this.players.length <= 0 && this.settings.debug == false) {
+            return false;
+        }
         this.timer++;
         for (var i = 0; i < this.objects.length; i++) {
             this.objects[i].update(time);
@@ -144,6 +148,7 @@ var BreakOut = {
             texture: 'brickdeco002.png',
             normalTexture: 'brickdeco002-normal.png'
         };
+        // bottom
         while (decoI < rightPos) {
             var DecoBrick = new BreakOut.BrickDeco(settings);
             DecoBrick.init();
@@ -153,19 +158,34 @@ var BreakOut = {
             DecoBrick.object.position.y = heightPos;
             decoI += 64;
         }
-        for (var i = 0; i < 4; i++) {
+        // top
+        var decoI = 32;
+        var heightPos = 42;
+        while (decoI < rightPos) {
+            var DecoBrick = new BreakOut.BrickDeco(settings);
+            DecoBrick.init();
+            DecoBrick.team = 'B';
+            DecoBrick.object.rotation = Math.PI * 3;
+            DecoBrick.add();
+            DecoBrick.object.position.x = decoI;
+            DecoBrick.object.position.y = heightPos;
+            decoI += 64;
+        }
+        for (var i = 0; i < 2; i++) {
             var ball = new BreakOut.Ball({radius: 8});
             ball.init();
-            ball.object.position.x = Math.random() * 10;
-            ball.object.position.y = 250 + (Math.random() * 50);
+            ball.object.position.x = 8;
+            ball.object.position.y = this.settings.height / 2;
             ball.add();
         }
-        tmpPlayer = new BreakOut.Paddle();
-        tmpPlayer.init();
-        tmpPlayer.add();
-        tmpPlayer.object.position.x = BreakOut.settings.width / 2;
-        tmpPlayer.object.position.y = 150;
-        tmpPlayer.team = 'B';
+        if (this.settings.debug == true) {
+            tmpPlayer = new BreakOut.Paddle();
+            tmpPlayer.init();
+            tmpPlayer.add();
+            tmpPlayer.object.position.x = BreakOut.settings.width / 2;
+            tmpPlayer.object.position.y = 150;
+            tmpPlayer.team = 'B';
+        }
 
         for (var i = 0; i < 5; i++) {
             var explosion = new BreakOut.Explosion();
@@ -214,5 +234,48 @@ var BreakOut = {
         scoreTeamB.object.position.x = this.settings.width / 2;
         scoreTeamB.object.position.y = 30;
 
+        COUCHFRIENDS.connect();
+    },
+    addPlayer: function (id) {
+        var countA = 0;
+        var countB = 0;
+        var team = 'A';
+        var yPos = this.settings.height - 150;
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].team == 'A') {
+                countA++;
+            }
+            else {
+                countB++;
+            }
+        }
+        if (countA > countB) {
+            team = 'B';
+            yPos = 150;
+        }
+        var playerElement = new BreakOut.Paddle();
+        var color = playerElement.color;
+        playerElement.team = team;
+        playerElement.init();
+        playerElement.add();
+        playerElement.object.position.x = BreakOut.settings.width / 2;
+        playerElement.object.position.y = yPos;
+        var player = {
+            id: id,
+            color: '#' + color,
+            team: team,
+            element: playerElement
+        };
+        this.players.push(player);
+        return player;
+    },
+    removePlayer: function (id) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (id == this.players[i].id) {
+                this.players[i].element.remove();
+                this.players.splice(i, 1);
+                return true;
+            }
+        }
     }
 };

@@ -139,15 +139,70 @@ function init() {
             return;
         }
         tmpPlayer.object.position.x = e.clientX;
-        var x = (2 / BreakOut.settings.width * e.clientX) - 1;
-        var y = (2 / BreakOut.settings.height * e.clientY) - 1;
-        x *= -1;
-        y *= -1;
         mousePos.x = e.clientX;
         mousePos.y = e.clientY;
     });
     requestAnimationFrame(update);
 }
+
+COUCHFRIENDS.on('connect', function () {
+    var jsonData = {
+        topic: 'game',
+        action: 'host',
+        data: {
+            sessionKey: 'breakout-1234'
+        }
+    };
+    COUCHFRIENDS.send(jsonData);
+});
+
+COUCHFRIENDS.on('playerJoined', function (data) {
+    var player = BreakOut.addPlayer(data.id);
+    var jsonData = {
+        topic: 'player',
+        action: 'identify',
+        data: {
+            id: data.id,
+            color: player.color.replace('0x', '#')
+        }
+    };
+    COUCHFRIENDS.send(jsonData);
+});
+
+COUCHFRIENDS.on('playerOrientation', function (data) {
+
+    var players = BreakOut.players;
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].id == data.id) {
+            var x = data.x * 30;
+            players[i].element.setSpeed(x);
+            return;
+        }
+    }
+
+});
+
+function vibrate(team, duration) {
+    duration = duration || 200;
+    for (var i = 0; i < BreakOut.players.length; i++) {
+        if (BreakOut.players[i].team != team) {
+            continue;
+        }
+        var jsonData = {
+            topic: 'interface',
+            action: 'vibrate',
+            data: {
+                playerId: BreakOut.players[i].id,
+                duration: duration
+            }
+        };
+        COUCHFRIENDS.send(jsonData);
+    }
+}
+
+COUCHFRIENDS.on('playerLeft', function (data) {
+    BreakOut.removePlayer(data.id);
+});
 
 function update(time) {
     requestAnimationFrame(update);

@@ -63,5 +63,6 @@ BreakOut.BrickDeco.prototype.damage = function (ball) {
 
     if (typeof BreakOut.score[this.team] != 'undefined') {
         BreakOut.score[this.team] = Math.floor(BreakOut.score[this.team] * .5);
+        vibrate(this.team, 500);
     }
 };
