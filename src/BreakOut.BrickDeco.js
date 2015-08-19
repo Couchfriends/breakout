@@ -45,12 +45,15 @@ BreakOut.BrickDeco.prototype = Object.create(BreakOut.Brick.prototype);
 
 BreakOut.BrickDeco.prototype.init = function (settings) {
 
-    var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
     this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
     this.object = new PIXI.Sprite(this.texture);
-    this.object.normalTexture = normalMapTexture;
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
+
+    if (BreakOut.settings.lighting == true) {
+        var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
+        this.object.normalTexture = normalMapTexture;
+    }
 
 };
 

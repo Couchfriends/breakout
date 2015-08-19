@@ -85,9 +85,12 @@ BreakOut.Explosion.prototype.init = function (settings) {
     this.object.anchor.y = .5;
     this.object.visible = false;
 
-    var color = 0xff0000;
-    this.light = new PIXI.lights.PointLight(color, 1);
-    this.object.addChild(this.light);
+
+    if (BreakOut.settings.lighting == true) {
+        var color = 0xff0000;
+        this.light = new PIXI.lights.PointLight(color, 1);
+        this.object.addChild(this.light);
+    }
 
 };
 

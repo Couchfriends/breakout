@@ -45,10 +45,12 @@ BreakOut.AssetBackground.prototype = Object.create(BreakOut.Asset.prototype);
 
 BreakOut.AssetBackground.prototype.init = function (settings) {
 
-    var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
     this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
     this.object = new PIXI.Sprite(this.texture);
-    this.object.normalTexture = normalMapTexture;
+    if (BreakOut.settings.lighting == true) {
+        var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
+        this.object.normalTexture = normalMapTexture;
+    }
 
 };
 

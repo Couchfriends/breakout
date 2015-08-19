@@ -197,6 +197,9 @@ function init() {
     });
 
     window.addEventListener('mousemove', function (e) {
+        if (typeof tmpPlayer == 'undefined') {
+            return;
+        }
         tmpPlayer.object.position.x = e.clientX;
         var x = (2 / BreakOut.settings.width * e.clientX) - 1;
         var y = (2 / BreakOut.settings.height * e.clientY) - 1;

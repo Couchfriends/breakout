@@ -30,7 +30,9 @@ var BreakOut = {
     settings: {
         width: 1280,
         height: 720,
-        assetDir: 'assets/'
+        assetDir: 'assets/',
+        particles: true,
+        lighting: true
     },
     objects: [],
     /**

@@ -66,5 +66,6 @@ BreakOut.Asset.prototype.update = function (time) {
         this.object._originalTexture = this.textures[nextTexture];
         this.light.brightness = .5 + (Math.random() * .5);
     }
+    return true;
 
 };

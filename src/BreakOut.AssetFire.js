@@ -43,6 +43,7 @@ BreakOut.AssetFire = function (settings) {
         'torch-009.png'
     ];
     this.light = {};
+    this.particles = [];
 };
 
 BreakOut.AssetFire.prototype = Object.create(BreakOut.Asset.prototype);
@@ -54,5 +55,47 @@ BreakOut.AssetFire.prototype.init = function (settings) {
     var color = 0xff0000;
     this.light = new PIXI.lights.PointLight(color, 1);
     this.object.addChild(this.light);
+
+    if (BreakOut.settings.particles == true) {
+        for (var i = 0; i < 5; i++) {
+            var particle = new PIXI.Graphics();
+            var color = randomColor({hue: 'red'});
+            if (i % 3 == 0) {
+                color = randomColor({hue: 'orange'})
+            }
+            else if (i % 4 == 0) {
+                color = randomColor({hue: 'yellow'})
+            }
+            color = color.replace(/#/, '0x');
+
+            particle.beginFill(color, 1);
+            particle.alpha = Math.random() * 1;
+            particle.drawCircle(0, 0, Math.random() * 1);
+            particle.position.x = Math.random() * 5 - 2.5;
+            particle.position.y = -14;
+            console.log(particle);
+            // alpha;
+            this.particles.push(particle);
+            this.object.addChild(particle);
+        }
+    }
+
+};
+
+BreakOut.AssetFire.prototype.update = function (time) {
+
+    if (!BreakOut.Asset.prototype.update.call(this, time)) {
+        return false;
+    }
+    for (var i = 0; i < this.particles.length; i++) {
+        this.particles[i].position.y -= .3;
+        this.particles[i].position.x += Math.random() * 1 - .5;
+        this.particles[i].alpha -= .01;
+        if (this.particles[i].alpha <= 0) {
+            this.particles[i].position.x = Math.random() * 8 - 4;
+            this.particles[i].position.y = -14;
+            this.particles[i].alpha = 1;
+        }
+    }
 
 };

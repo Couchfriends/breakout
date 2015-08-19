@@ -69,12 +69,10 @@ BreakOut.Ball.prototype.init = function (settings) {
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
 
-    //this.object = new PIXI.Graphics();
-    //this.object.beginFill(color, 1);
-    //this.object.drawCircle(0, 0, this.stats.radius);
-
-    this.light = new PIXI.lights.PointLight(this.color, 1);
-    this.object.addChild(this.light);
+    if (BreakOut.settings.lighting == true) {
+        this.light = new PIXI.lights.PointLight(this.color, 1);
+        this.object.addChild(this.light);
+    }
 
 };
 
