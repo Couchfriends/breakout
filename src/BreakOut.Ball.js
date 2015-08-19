@@ -42,7 +42,8 @@ BreakOut.Ball = function (settings) {
     this.light = {};
 
     this.stats = {
-        radius: settings.radius || 16,
+        damage: 1,
+        radius: settings.radius || 8,
         prevPosition: {
             x: 0,
             y: 0
@@ -90,6 +91,7 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfWidthTarget = target.object.width / 2;
         var halfHeightTarget = target.object.height / 2;
 
+        // @todo fix me (the } else {)
         // top
         if (pos.y < (posTarget.y - halfHeightTarget - speed.y)) {
             adjustSpeed = true;
@@ -209,10 +211,13 @@ BreakOut.Ball.prototype.update = function (time) {
     if (pos.y > (settings.height - radius)) {
         speed.y = -speed.y;
         pos.y = (settings.height - radius);
+        BreakOut.score.A = Math.floor(BreakOut.score.A * .5);
+
     }
     else if (pos.y < radius) {
         speed.y = Math.abs(speed.y);
         pos.y = radius;
+        BreakOut.score.B = Math.floor(BreakOut.score.B * .5);
     }
     else if (pos.x > (settings.width - radius)) {
         speed.x = -speed.x;

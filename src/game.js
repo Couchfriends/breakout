@@ -52,51 +52,6 @@ function init() {
     ajax(BreakOut.settings.assetDir + 'level001.json', function (jsonData) {
         jsonData = JSON.parse(jsonData);
 
-
-        var backgroundWidth = 256;
-        var backgroundHeight = 256;
-        for (var x = 0; x < BreakOut.settings.width; x += backgroundWidth) {
-
-            for (var y = 0; y < BreakOut.settings.height; y += backgroundHeight) {
-                var background = new BreakOut.AssetBackground();
-                background.init();
-                background.add();
-                background.object.position.x = x;
-                background.object.position.y = y;
-            }
-        }
-
-
-        // Bottom wall
-        var decoI = 32;
-        var rightPos = BreakOut.settings.width;
-        var heightPos = BreakOut.settings.height - 42;
-
-        var settings = {
-            texture: 'brickdeco002.png',
-            normalTexture: 'brickdeco002-normal.png'
-        };
-        while (decoI < rightPos) {
-            var DecoBrick = new BreakOut.BrickDeco(settings);
-            DecoBrick.init();
-            DecoBrick.add();
-            DecoBrick.object.position.x = decoI;
-            DecoBrick.object.position.y = heightPos;
-            decoI += 64;
-        }
-        for (var i = 0; i < 5; i++) {
-            var ball = new BreakOut.Ball({radius: 15});
-            ball.init();
-            ball.object.position.x = Math.random() * 10;
-            ball.object.position.y = h - 250 + (Math.random() * 50);
-            ball.add();
-        }
-        tmpPlayer = new BreakOut.Paddle();
-        tmpPlayer.init();
-        tmpPlayer.add();
-        tmpPlayer.object.position.x = w / 2;
-        tmpPlayer.object.position.y = 150;
-
         var tileWidth = jsonData.tilewidth;
         var tileHeight = jsonData.tileheight;
         var tiles = [];
@@ -176,24 +131,7 @@ function init() {
             }
         }
 
-        for (var i = 0; i < 5; i++) {
-            var explosion = new BreakOut.Explosion();
-            explosion.init();
-            explosion.add();
-            BreakOut.explosions.push(explosion);
-        }
-
-        var fire = new BreakOut.AssetFire();
-        fire.init();
-        fire.add();
-        fire.object.position.x = 64;
-        fire.object.position.y = BreakOut.settings.height - 102;
-
-        var fire = new BreakOut.AssetFire();
-        fire.init();
-        fire.add();
-        fire.object.position.x = BreakOut.settings.width - 64;
-        fire.object.position.y = BreakOut.settings.height - 102;
+        BreakOut.init();
     });
 
     window.addEventListener('mousemove', function (e) {

@@ -27,41 +27,33 @@
  * Brick object
  * @constructor
  */
-BreakOut.BrickDeco = function (settings) {
+BreakOut.TextBonus = function (settings) {
 
-    BreakOut.Brick.call(this, settings);
+    BreakOut.Text.call(this, settings);
 
-    settings = settings || {};
-    settings.texture = settings.texture || 'brickdeco001.png';
-    settings.normalTexture = settings.normalTexture || 'brickdeco001-normal.png';
+    this.name = 'text';
+    this.text = '0';
 
-    this.name = 'brick';
-
-    this.team = '';
-
-    this.texture = settings.texture;
-    this.normalTexture = settings.normalTexture;
-};
-
-BreakOut.BrickDeco.prototype = Object.create(BreakOut.Brick.prototype);
-
-BreakOut.BrickDeco.prototype.init = function (settings) {
-
-    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
-    this.object = new PIXI.Sprite(this.texture);
-    this.object.anchor.x = .5;
-    this.object.anchor.y = .5;
-
-    if (BreakOut.settings.lighting == true) {
-        var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
-        this.object.normalTexture = normalMapTexture;
-    }
+    this.font = 'bold 24px Arial';
+    this.fill = '#ff9900';
+    this.align = 'center';
+    this.stroke = '#ffffff';
+    this.strokeThickness = 3;
 
 };
 
-BreakOut.BrickDeco.prototype.damage = function (ball) {
+BreakOut.TextBonus.prototype = Object.create(BreakOut.Text.prototype);
 
-    if (typeof BreakOut.score[this.team] != 'undefined') {
-        BreakOut.score[this.team] = Math.floor(BreakOut.score[this.team] * .5);
+BreakOut.TextBonus.prototype.update = function (time) {
+
+    if (!BreakOut.Text.prototype.update.call(this, time)) {
+        return false;
     }
+    this.object.alpha -= .05;
+    this.object.position.y -= 1;
+    if (this.object.alpha <= 0) {
+        this.object.visible = false;
+        this.object.alpha = 1;
+    }
+
 };

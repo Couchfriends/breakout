@@ -31,15 +31,23 @@ var BreakOut = {
         width: 1280,
         height: 720,
         assetDir: 'assets/',
-        particles: true,
-        lighting: true
+        particles: true, // Render particles
+        particleDensity: 1, // Multiple particles by this number
+        lighting: true // Show dynamic lighting
     },
+    score: {
+        A: 0,
+        B: 0
+    },
+    players: [],
+    timer: 0,
     objects: [],
     /**
      * List with batch operations to execute
      */
     batches: [],
     update: function(time) {
+        this.timer++;
         for (var i = 0; i < this.objects.length; i++) {
             this.objects[i].update(time);
         }
@@ -48,7 +56,7 @@ var BreakOut = {
         for (var i = 0; i < this.batches.length; i++) {
             switch (this.batches[i].type) {
                 case 'damage':
-                    this.batches[i].object.damage(this.batches[i].value);
+                    this.batches[i].object.damage(this.batches[i].ball, this.batches[i].value);
                     continue;
                     break;
                 default:
@@ -59,11 +67,28 @@ var BreakOut = {
         }
         this.batches = batches;
     },
+    scores: [],
+    addScore: function (team, score, pos) {
+        if (typeof this.score[team] != 'undefined') {
+            this.score[team] += score;
+        }
+        if (typeof pos != 'undefined' && typeof pos.x != 'undefined') {
+            for (var i = 0; i < this.scores.length; i++) {
+                if (this.scores[i].object.visible == false) {
+                    this.scores[i].object.position.x = pos.x;
+                    this.scores[i].object.position.y = pos.y;
+                    this.scores[i].object.visible = true;
+                    this.scores[i].object.text = score;
+                    break;
+                }
+            }
+        }
+    },
     /**
      * List with explosions that can be added to the scene
      */
     explosions: [],
-    addExplosion: function (pos, range) {
+    addExplosion: function (pos, range, ball) {
 
         // find bricks in range...
         var minX = pos.x - range;
@@ -80,7 +105,8 @@ var BreakOut = {
                 this.batches.push({
                     type: 'damage',
                     object: this.objects[i],
-                    value: Infinity
+                    value: Infinity,
+                    ball: ball
                 });
             }
         }
@@ -93,5 +119,100 @@ var BreakOut = {
                 break;
             }
         }
+    },
+    init: function () {
+
+        var backgroundWidth = 256;
+        var backgroundHeight = 256;
+        for (var x = 0; x < this.settings.width; x += backgroundWidth) {
+
+            for (var y = 0; y < this.settings.height; y += backgroundHeight) {
+                var background = new this.AssetBackground();
+                background.init();
+                background.add();
+                background.object.position.x = x;
+                background.object.position.y = y;
+            }
+        }
+
+        // Bottom wall
+        var decoI = 32;
+        var rightPos = this.settings.width;
+        var heightPos = this.settings.height - 42;
+
+        var settings = {
+            texture: 'brickdeco002.png',
+            normalTexture: 'brickdeco002-normal.png'
+        };
+        while (decoI < rightPos) {
+            var DecoBrick = new BreakOut.BrickDeco(settings);
+            DecoBrick.init();
+            DecoBrick.team = 'A';
+            DecoBrick.add();
+            DecoBrick.object.position.x = decoI;
+            DecoBrick.object.position.y = heightPos;
+            decoI += 64;
+        }
+        for (var i = 0; i < 4; i++) {
+            var ball = new BreakOut.Ball({radius: 8});
+            ball.init();
+            ball.object.position.x = Math.random() * 10;
+            ball.object.position.y = 250 + (Math.random() * 50);
+            ball.add();
+        }
+        tmpPlayer = new BreakOut.Paddle();
+        tmpPlayer.init();
+        tmpPlayer.add();
+        tmpPlayer.object.position.x = BreakOut.settings.width / 2;
+        tmpPlayer.object.position.y = 150;
+        tmpPlayer.team = 'B';
+
+        for (var i = 0; i < 5; i++) {
+            var explosion = new BreakOut.Explosion();
+            explosion.init();
+            explosion.add();
+            BreakOut.explosions.push(explosion);
+        }
+
+        for (var i = 0; i < 5; i++) {
+            var score = new BreakOut.TextBonus();
+            score.init();
+            score.object.visible = false;
+            score.add();
+            this.scores.push(score);
+        }
+
+        var fire = new BreakOut.AssetFire();
+        fire.init();
+        fire.add();
+        fire.object.position.x = 64;
+        fire.object.position.y = this.settings.height - 102;
+
+        var fire = new BreakOut.AssetFire();
+        fire.init();
+        fire.add();
+        fire.object.position.x = this.settings.width - 64;
+        fire.object.position.y = this.settings.height - 102;
+
+        var scoreTeamA = new BreakOut.TextScore();
+        scoreTeamA.text = 0;
+        scoreTeamA.team = 'A';
+        scoreTeamA.font = 'bold 32px Arial';
+        scoreTeamA.strokeThickness = 2;
+        scoreTeamA.init();
+        scoreTeamA.add();
+        scoreTeamA.object.position.x = this.settings.width / 2;
+        scoreTeamA.object.position.y = this.settings.height - 30;
+
+        var scoreTeamB = new BreakOut.TextScore();
+        scoreTeamB.text = 0;
+        scoreTeamB.team = 'B';
+        scoreTeamB.font = 'bold 32px Arial';
+        scoreTeamB.strokeThickness = 2;
+        scoreTeamB.init();
+        scoreTeamB.add();
+        scoreTeamB.object.position.x = this.settings.width / 2;
+        scoreTeamB.object.position.y = 30;
+
     }
 };

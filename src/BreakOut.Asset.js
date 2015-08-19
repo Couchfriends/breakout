@@ -52,20 +52,3 @@ BreakOut.Asset.prototype.init = function (settings) {
     this.object.anchor.y = .5;
 
 };
-
-BreakOut.Asset.prototype.update = function (time) {
-
-    if (!BreakOut.Element.prototype.update.call(this, time)) {
-        return false;
-    }
-    if (time % this.animationSpeed <= 2) {
-        var nextTexture = this.textures.indexOf(this.object.texture) + 1;
-        if (typeof this.textures[nextTexture] == 'undefined') {
-            nextTexture = 0;
-        }
-        this.object._originalTexture = this.textures[nextTexture];
-        this.light.brightness = .5 + (Math.random() * .5);
-    }
-    return true;
-
-};

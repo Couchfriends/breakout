@@ -112,7 +112,7 @@ BreakOut.Explosion.prototype.update = function (time) {
             brightness = this.textures.length - nextTexture;
         }
         this.object._originalTexture = this.textures[nextTexture];
-        this.light.brightness = brightness;
+        this.light.brightness = (brightness * .5);
     }
 
 };

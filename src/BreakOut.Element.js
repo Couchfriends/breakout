@@ -49,6 +49,8 @@ BreakOut.Element = function (settings) {
     this.collisionList = [];
 
     this.texture = '';
+    this.textures = [];
+    this.animationSpeed = 0; // Increase to animate this.textures;
 
 };
 
@@ -82,6 +84,16 @@ BreakOut.Element.prototype = {
         var collisionObject = this.checkCollision();
         if (collisionObject != false) {
             this.collision(collisionObject);
+        }
+
+        if (this.textures.length > 1 && this.animationSpeed > 0) {
+            if (BreakOut.timer % this.animationSpeed == 0) {
+                var nextTexture = this.textures.indexOf(this.object.texture) + 1;
+                if (typeof this.textures[nextTexture] == 'undefined') {
+                    nextTexture = 0;
+                }
+                this.object._originalTexture = this.textures[nextTexture];
+            }
         }
 
         return true;

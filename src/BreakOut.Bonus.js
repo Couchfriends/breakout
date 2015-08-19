@@ -27,11 +27,11 @@
  * Brick object
  * @constructor
  */
-BreakOut.Brick = function (settings) {
+BreakOut.Bonus = function (settings) {
 
     BreakOut.Element.call(this, settings);
 
-    this.name = 'brick';
+    this.name = 'bonus';
 
     /**
      * list of textures. Start with the latest and move up to the first. Then it
@@ -39,76 +39,59 @@ BreakOut.Brick = function (settings) {
      * @type {string[]}
      */
     this.textures = [
-        'brick.png'
+        'bonus.png'
     ];
 
-    this.team = 'A';
+    this.team = '';
 
-    this.score = 10;
+    this.score = 0;
 
-    /**
-     * List of bonuses that can be spawned
-     * @type {Array}
-     */
-    this.bonuses = [
-        'bonus-coin'
+    this.collisionList = [
+        'paddle'
     ];
-    /**
-     * Drop chance in percent
-     * @type {number}
-     */
-    this.dropChance = 10;
+
 };
 
-BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
+BreakOut.Bonus.prototype = Object.create(BreakOut.Element.prototype);
 
-BreakOut.Brick.prototype.init = function (settings) {
+BreakOut.Bonus.prototype.init = function (settings) {
 
     for (var i = 0; i < this.textures.length; i++) {
         this.textures[i] = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.textures[i]);
     }
     this.object = new PIXI.Sprite();
     this.object.texture = this.textures[this.textures.length - 1];
-    //var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + "brick-normal.png");
-    //this.object.normalTexture = normalMapTexture;
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
 
 };
 
-BreakOut.Brick.prototype.damage = function (ball, damage) {
+BreakOut.Bonus.prototype.update = function (time) {
 
-    var damage = damage || ball.stats.damage;
-    this.team = ball.team;
-    var newTexture = this.textures.indexOf(this.object.texture) - damage;
-    if (typeof this.textures[newTexture] == 'undefined') {
-        this.remove();
+    if (!BreakOut.Element.prototype.update.call(this, time)) {
+        return false;
+    }
+    if (this.team == 'B') {
+        this.object.position.y -= 1;
     }
     else {
-        // Probably a bug with the light plugin?
-        this.object._originalTexture = this.textures[newTexture];
+        this.object.position.y += 1;
     }
-
+    if (this.object.position.y < -(this.object.height) || this.object.position.y > (BreakOut.settings.height + this.object.height)) {
+        this.remove();
+    }
+    return true;
 };
 
-BreakOut.Brick.prototype.remove = function () {
-
-    if (this.bonuses.length > 0 && Math.random() * 100 < this.dropChance) {
-        var bonus = this.bonuses[Math.floor(Math.random() * this.bonuses.length)];
-        switch (bonus) {
-            case 'bonus-coin':
-                bonus = new BreakOut.BonusCoin();
-                break;
-            default:
-                console.log(bonus);
-                bonus = new BreakOut.Bonus();
-        }
-        bonus.init();
-        bonus.add();
-        bonus.object.position.x = this.object.position.x;
-        bonus.object.position.y = this.object.position.y;
-        bonus.team = this.team;
+BreakOut.Bonus.prototype.collision = function (target) {
+    if (target.name == 'paddle' && this.score > 0) {
+        BreakOut.addScore(this.team, this.score, this.object.position);
     }
+    this.remove();
+};
+
+BreakOut.Bonus.prototype.remove = function () {
+
     BreakOut.Element.prototype.remove.call(this);
 
 };

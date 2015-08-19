@@ -27,41 +27,41 @@
  * Brick object
  * @constructor
  */
-BreakOut.BrickDeco = function (settings) {
+BreakOut.Text = function (settings) {
 
-    BreakOut.Brick.call(this, settings);
+    BreakOut.Element.call(this, settings);
 
-    settings = settings || {};
-    settings.texture = settings.texture || 'brickdeco001.png';
-    settings.normalTexture = settings.normalTexture || 'brickdeco001-normal.png';
+    this.name = 'text';
+    this.text = 'Bonus!';
 
-    this.name = 'brick';
+    this.font = 'bold 60px Arial';
+    this.fill = '#ff9900';
+    this.align = 'center';
+    this.stroke = '#ffffff';
+    this.strokeThickness = 6;
 
-    this.team = '';
-
-    this.texture = settings.texture;
-    this.normalTexture = settings.normalTexture;
 };
 
-BreakOut.BrickDeco.prototype = Object.create(BreakOut.Brick.prototype);
+BreakOut.Text.prototype = Object.create(BreakOut.Element.prototype);
 
-BreakOut.BrickDeco.prototype.init = function (settings) {
+BreakOut.Text.prototype.init = function (settings) {
 
-    this.texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.texture);
-    this.object = new PIXI.Sprite(this.texture);
+    this.object = new PIXI.Text(this.text, {
+        font: this.font,
+        fill: this.fill,
+        align: this.align,
+        stroke: this.stroke,
+        strokeThickness: this.strokeThickness
+    });
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
 
-    if (BreakOut.settings.lighting == true) {
-        var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
-        this.object.normalTexture = normalMapTexture;
-    }
-
 };
 
-BreakOut.BrickDeco.prototype.damage = function (ball) {
+BreakOut.Text.prototype.update = function (time) {
 
-    if (typeof BreakOut.score[this.team] != 'undefined') {
-        BreakOut.score[this.team] = Math.floor(BreakOut.score[this.team] * .5);
+    if (!BreakOut.Element.prototype.update.call(this, time)) {
+        return false;
     }
+    return true;
 };
