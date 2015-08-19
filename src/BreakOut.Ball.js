@@ -35,6 +35,12 @@ BreakOut.Ball = function (settings) {
 
     this.texture = 'ball.png';
 
+    this.team = '';
+
+    this.color = 0xffffff;
+
+    this.light = {};
+
     this.stats = {
         radius: settings.radius || 16,
         prevPosition: {
@@ -42,12 +48,12 @@ BreakOut.Ball = function (settings) {
             y: 0
         },
         speed: {
-            x: -4,
-            y: 4
+            x: -3,
+            y: 3
         },
         maxSpeed: {
-            x: 4,
-            y: 4
+            x: 3,
+            y: 3
         }
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
@@ -63,13 +69,12 @@ BreakOut.Ball.prototype.init = function (settings) {
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
 
-    var color = 0xffffff;
     //this.object = new PIXI.Graphics();
     //this.object.beginFill(color, 1);
     //this.object.drawCircle(0, 0, this.stats.radius);
 
-    var ballLight = new PIXI.lights.PointLight(color, 1);
-    this.object.addChild(ballLight);
+    this.light = new PIXI.lights.PointLight(this.color, 1);
+    this.object.addChild(this.light);
 
 };
 
@@ -87,21 +92,25 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfWidthTarget = target.object.width / 2;
         var halfHeightTarget = target.object.height / 2;
 
-        if (pos.y < (posTarget.y - halfHeightTarget)) {
+        // top
+        if (pos.y < (posTarget.y - halfHeightTarget - speed.y)) {
             adjustSpeed = true;
             speed.y *= -1;
             pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
         }
-        else if (pos.y > (posTarget.y + halfHeightTarget)) {
+        // bottom
+        else if (pos.y > (posTarget.y + halfHeightTarget + speed.y)) {
             adjustSpeed = true;
             speed.y *= -1;
             pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
         }
-        else if (pos.x < (posTarget.x - halfWidthTarget)) {
+        // left
+        else if (pos.x < (posTarget.x - halfWidthTarget - speed.x)) {
             speed.x *= -1;
             pos.x = (posTarget.x - halfWidthTarget) - halfWidth;
         }
-        else if (pos.x > (posTarget.x + halfWidthTarget)) {
+        // right
+        else if (pos.x > (posTarget.x + halfWidthTarget + speed.x)) {
             speed.x *= -1;
             pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
         }
@@ -120,20 +129,21 @@ BreakOut.Ball.prototype.collision = function (target) {
             speed.x = this.stats.maxSpeed.x / 100 * percent;
             speed.x *= -1;
         }
-        if (0) {
-            // Speed velocity for paddle
-            var magnitude = (this.distanceTo(paddle) - this.size.y / 2 - paddle.size.y / 2);
-            var ratio = magnitude / (paddle.size.x / 2) * 2.5;
-
-            if (this.pos.x + this.size.x / 2 < paddle.pos.x + paddle.size.x / 2) {
-                // send the ball to the left if hit on the left side of the paddle, and vice versa
-                ratio = -ratio;
-            }
-
-            return this.speed * ratio;
-        }
+        //speed.y = addY;
         if (target.name == 'brick') {
             target.damage(this);
+        }
+    }
+
+    if (target.name == 'paddle') {
+        this.object.tint = target.color;
+        this.team = target.team;
+        this.light.color = target.color;
+        var addPercent = (100 / (this.stats.maxSpeed.x + this.stats.maxSpeed.y) * (Math.abs(speed.x) + Math.abs(speed.y)));
+        addPercent = addPercent * .01;
+        if (addPercent < 1) {
+            speed.x *= 1 + addPercent;
+            speed.y *= 1 + addPercent;
         }
     }
 

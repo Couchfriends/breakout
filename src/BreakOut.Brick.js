@@ -41,6 +41,17 @@ BreakOut.Brick = function (settings) {
     this.textures = [
         'brick.png'
     ];
+
+    /**
+     * List of bonuses that can be spawned
+     * @type {Array}
+     */
+    this.bonuses = [];
+    /**
+     * Drop chance in percent
+     * @type {number}
+     */
+    this.dropChance = 50;
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
@@ -70,5 +81,15 @@ BreakOut.Brick.prototype.damage = function (ball) {
         // Probably a bug with the light plugin?
         this.object._originalTexture = this.textures[newTexture];
     }
+
+};
+
+
+BreakOut.Brick.prototype.remove = function () {
+
+    if (this.bonuses.length > 0 && Math.random() * 100 < this.dropChance) {
+
+    }
+    BreakOut.Element.prototype.remove.call(this);
 
 };

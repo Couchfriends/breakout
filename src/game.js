@@ -95,7 +95,7 @@ function init() {
         tmpPlayer.init();
         tmpPlayer.add();
         tmpPlayer.object.position.x = w / 2;
-        tmpPlayer.object.position.y = h - 150;
+        tmpPlayer.object.position.y = 150;
 
         var tileWidth = jsonData.tilewidth;
         var tileHeight = jsonData.tileheight;

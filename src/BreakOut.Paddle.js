@@ -33,6 +33,10 @@ BreakOut.Paddle = function () {
 
     this.name = 'paddle';
 
+    this.team = 'A';
+
+    this.color = randomColor().replace(/#/, '0x');
+
     this.texture = 'paddle001.png';
 
 };
@@ -47,9 +51,8 @@ BreakOut.Paddle.prototype.init = function (settings) {
     //this.object.normalTexture = normalMapTexture;
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
-    var color = randomColor().replace(/#/, '0x');
-    var ballLight = new PIXI.lights.PointLight(color, 1);
-    this.object.tint = color;
+    var ballLight = new PIXI.lights.PointLight(this.color, 1);
+    this.object.tint = this.color;
     this.object.addChild(ballLight);
 
 };
