@@ -211,14 +211,22 @@ BreakOut.Ball.prototype.update = function (time) {
     if (pos.y > (settings.height - radius)) {
         speed.y = -speed.y;
         pos.y = (settings.height - radius);
-        BreakOut.score.A = Math.floor(BreakOut.score.A * .5);
-        vibrate('A', 500);
+        var removeScore = Math.floor(BreakOut.score.A * .5);
+        if (removeScore > 100) {
+            removeScore = 100;
+        }
+        BreakOut.score.A = removeScore;
+        vibrate('A', 250);
     }
     else if (pos.y < radius) {
         speed.y = Math.abs(speed.y);
         pos.y = radius;
-        BreakOut.score.B = Math.floor(BreakOut.score.B * .5);
-        vibrate('B', 500);
+        var removeScore = Math.floor(BreakOut.score.B * .5);
+        if (removeScore > 100) {
+            removeScore = 100;
+        }
+        BreakOut.score.B = removeScore;
+        vibrate('B', 250);
     }
     else if (pos.x > (settings.width - radius)) {
         speed.x = -speed.x;

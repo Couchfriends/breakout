@@ -43,6 +43,9 @@ BreakOut.Paddle = function () {
         x: 0
     };
 
+    // List of effects that applied to the paddle. Like 'sticky', 'frozen'
+    this.effects = [];
+
 };
 
 BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
@@ -67,12 +70,97 @@ BreakOut.Paddle.prototype.setSpeed = function (x) {
 
 };
 
+BreakOut.Paddle.prototype.applyEffect = function (effect) {
+
+    switch (effect) {
+        case 'freeze':
+            var timeout = 240; // in fps
+            var effectObject = {
+                effect: 'freeze',
+                endTimer: BreakOut.timer + timeout,
+                object: ''
+            };
+            var found = false;
+            for (var i = 0; i < this.effects.length; i++) {
+                if (this.effects[i].effect == 'freeze') {
+                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
+                    effectObject.object = this.effects[i].object;
+                    this.effects.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false) {
+                // add freezing effect
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-freeze.png');
+                var object = new PIXI.Sprite(texture);
+                object.anchor.x = .5;
+                object.anchor.y = .5;
+                object.position.y = 8;
+                effectObject.object = object;
+                this.object.addChild(object);
+
+            }
+            this.effects.push(effectObject);
+            break;
+        default:
+            console.log(effect);
+    }
+
+};
+
+/**
+ * Remove one or more effects
+ */
+BreakOut.Paddle.prototype.removeEffect = function (effect) {
+
+    var effects = [];
+    if (typeof effect == 'string') {
+        effect = [effect];
+    }
+    for (var i = 0; i < effect.length; i++) {
+        for (var i = 0; i < this.effects.length; i++) {
+            if (this.effects[i].effect == effect[i]) {
+                // Might wanna do something
+                if (this.effects[i].object != '') {
+                    this.object.removeChild(this.effects[i].object);
+                }
+                continue;
+            }
+            effects.push(this.effects[i]);
+        }
+    }
+    this.effects = effects;
+};
+
 BreakOut.Paddle.prototype.update = function (time) {
 
     if (!BreakOut.Element.prototype.update.call(this, time)) {
         return false;
     }
-    this.object.position.x += this.speed.x;
+    var speedX = this.speed.x;
+
+    var removeEffects = [];
+    for (var i = 0; i < this.effects.length; i++) {
+        if (this.effects[i].endTimer < BreakOut.timer) {
+            removeEffects.push(this.effects[i].effect);
+            continue;
+        }
+        if (this.effects[i].endTimer - BreakOut.timer < 120 && this.effects[i].object != '') {
+            var visible = true;
+            if (BreakOut.timer % 20 < 5) {
+                visible = false;
+            }
+            this.effects[i].object.visible = visible;
+        }
+        if (this.effects[i].effect == 'freeze') {
+            speedX *= .5;
+        }
+    }
+    if (removeEffects.length > 0) {
+        this.removeEffect(removeEffects);
+    }
+    this.object.position.x += speedX;
     if (this.object.position.x < 0) {
         this.object.position.x = 0;
     }

@@ -158,12 +158,13 @@ COUCHFRIENDS.on('connect', function () {
 
 COUCHFRIENDS.on('playerJoined', function (data) {
     var player = BreakOut.addPlayer(data.id);
+    console.log(player.color);
     var jsonData = {
         topic: 'player',
         action: 'identify',
         data: {
             id: data.id,
-            color: player.color.replace('0x', '#')
+            color: player.color
         }
     };
     COUCHFRIENDS.send(jsonData);
@@ -174,7 +175,7 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == data.id) {
-            var x = data.x * 30;
+            var x = data.x * 40;
             players[i].element.setSpeed(x);
             return;
         }

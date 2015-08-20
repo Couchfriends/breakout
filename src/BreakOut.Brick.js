@@ -51,13 +51,14 @@ BreakOut.Brick = function (settings) {
      * @type {Array}
      */
     this.bonuses = [
-        'bonus-coin'
+        'bonus-coin',
+        'bonus-freeze'
     ];
     /**
      * Drop chance in percent
      * @type {number}
      */
-    this.dropChance = 10;
+    this.dropChance = 100;
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
@@ -106,6 +107,9 @@ BreakOut.Brick.prototype.remove = function () {
         switch (bonus) {
             case 'bonus-coin':
                 bonus = new BreakOut.BonusCoin();
+                break;
+            case 'bonus-freeze':
+                bonus = new BreakOut.BonusFreeze();
                 break;
             default:
                 console.log(bonus);

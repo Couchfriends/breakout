@@ -41,6 +41,22 @@ BreakOut.Bonus = function (settings) {
     this.textures = [
         'bonus.png'
     ];
+    // @todo might wanna do multiple as well? Bluh
+    this.childTexture = '';
+
+    /**
+     * Inner core
+     * @type {{}}
+     */
+    this.core = {};
+
+    this.animationSpeed = 3;
+
+    this.effect = '';
+
+    this.color = '';
+
+    this.particles = [];
 
     this.team = '';
 
@@ -49,6 +65,9 @@ BreakOut.Bonus = function (settings) {
     this.collisionList = [
         'paddle'
     ];
+
+    // Effect to apply on paddle
+    this.effect = '';
 
 };
 
@@ -63,6 +82,23 @@ BreakOut.Bonus.prototype.init = function (settings) {
     this.object.texture = this.textures[this.textures.length - 1];
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
+
+    if (BreakOut.settings.lighting == true && this.color != '') {
+        var color = this.color;
+        this.light = new PIXI.lights.PointLight(color, .5);
+        this.object.addChild(this.light);
+    }
+
+    // Inner core
+    if (this.childTexture != '') {
+        this.core = new PIXI.Sprite(PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.childTexture));
+        this.core.anchor.x = .5;
+        this.core.anchor.y = .5;
+        if (this.color != '') {
+            this.object.tint = this.color;
+        }
+        this.object.addChild(this.core);
+    }
 
 };
 
@@ -84,8 +120,13 @@ BreakOut.Bonus.prototype.update = function (time) {
 };
 
 BreakOut.Bonus.prototype.collision = function (target) {
-    if (target.name == 'paddle' && this.score > 0) {
-        BreakOut.addScore(this.team, this.score, this.object.position);
+    if (target.name == 'paddle') {
+        if (this.score > 0) {
+            BreakOut.addScore(this.team, this.score, this.object.position);
+        }
+        if (this.effect != '') {
+            target.applyEffect(this.effect);
+        }
     }
     this.remove();
 };

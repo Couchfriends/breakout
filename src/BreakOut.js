@@ -140,6 +140,7 @@ var BreakOut = {
         }
 
         // Bottom wall
+        /*
         var decoI = 32;
         var rightPos = this.settings.width;
         var heightPos = this.settings.height - 42;
@@ -171,6 +172,8 @@ var BreakOut = {
             DecoBrick.object.position.y = heightPos;
             decoI += 64;
         }
+         */
+
         for (var i = 0; i < 2; i++) {
             var ball = new BreakOut.Ball({radius: 8});
             ball.init();
@@ -202,6 +205,7 @@ var BreakOut = {
             this.scores.push(score);
         }
 
+        /*
         var fire = new BreakOut.AssetFire();
         fire.init();
         fire.add();
@@ -213,12 +217,13 @@ var BreakOut = {
         fire.add();
         fire.object.position.x = this.settings.width - 64;
         fire.object.position.y = this.settings.height - 102;
+         */
 
         var scoreTeamA = new BreakOut.TextScore();
         scoreTeamA.text = 0;
         scoreTeamA.team = 'A';
-        scoreTeamA.font = 'bold 32px Arial';
-        scoreTeamA.strokeThickness = 2;
+        scoreTeamA.font = 'bold 26px Arial';
+        scoreTeamA.strokeThickness = 1;
         scoreTeamA.init();
         scoreTeamA.add();
         scoreTeamA.object.position.x = this.settings.width / 2;
@@ -227,14 +232,16 @@ var BreakOut = {
         var scoreTeamB = new BreakOut.TextScore();
         scoreTeamB.text = 0;
         scoreTeamB.team = 'B';
-        scoreTeamB.font = 'bold 32px Arial';
-        scoreTeamB.strokeThickness = 2;
+        scoreTeamB.font = 'bold 26px Arial';
+        scoreTeamB.strokeThickness = 1;
         scoreTeamB.init();
         scoreTeamB.add();
         scoreTeamB.object.position.x = this.settings.width / 2;
         scoreTeamB.object.position.y = 30;
 
-        COUCHFRIENDS.connect();
+        if (this.settings.debug == false) {
+            COUCHFRIENDS.connect();
+        }
     },
     addPlayer: function (id) {
         var countA = 0;
@@ -262,7 +269,7 @@ var BreakOut = {
         playerElement.object.position.y = yPos;
         var player = {
             id: id,
-            color: '#' + color,
+            color: '#' + color.replace(/0x/, ''),
             team: team,
             element: playerElement
         };

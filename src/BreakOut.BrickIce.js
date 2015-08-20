@@ -34,6 +34,12 @@ BreakOut.BrickIce = function (settings) {
     this.textures = [
         'brick-ice.png'
     ];
+
+    this.bonuses = [
+        'bonus-freeze'
+    ];
+
+    this.dropChance = 100;
 };
 
 BreakOut.BrickIce.prototype = Object.create(BreakOut.Brick.prototype);
