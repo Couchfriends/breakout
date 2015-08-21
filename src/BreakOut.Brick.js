@@ -125,6 +125,11 @@ BreakOut.Brick.prototype.remove = function () {
         bonus.object.position.y = this.object.position.y;
         bonus.team = this.team;
     }
+
     BreakOut.Element.prototype.remove.call(this);
+    BreakOut.totalBricks--;
+    if (BreakOut.totalBricks <= 0) {
+        BreakOut.loadLevel();
+    }
 
 };

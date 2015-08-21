@@ -43,6 +43,11 @@ var BreakOut = {
     players: [],
     timer: 0,
     objects: [],
+    currentLevel: 0,
+    levels: [
+        'level001.json',
+        'level002.json'
+    ],
     /**
      * List with batch operations to execute
      */
@@ -71,6 +76,7 @@ var BreakOut = {
         }
         this.batches = batches;
     },
+    totalBricks: 0, // if zero on destroy next level.
     scores: [],
     addScore: function (team, score, pos) {
         if (score == 0) {
@@ -253,6 +259,100 @@ var BreakOut = {
 
         if (this.settings.debug == false) {
             COUCHFRIENDS.connect();
+        }
+    },
+    loadLevel: function () {
+
+        var file = this.levels[this.currentLevel];
+        ajax(BreakOut.settings.assetDir + file, function (jsonData) {
+            jsonData = JSON.parse(jsonData);
+
+            var tileWidth = jsonData.tilewidth;
+            var tileHeight = jsonData.tileheight;
+            var tiles = [];
+            var mapWidth = jsonData.width * tileWidth;
+            var mapHeight = jsonData.height * tileHeight;
+            var startX = (BreakOut.settings.width / 2) - (mapWidth / 2);
+            var startY = (BreakOut.settings.height / 2) - (mapHeight / 2);
+
+            for (var i = 0; i < jsonData.tilesets.length; i++) {
+                for (var index in jsonData.tilesets[i].tiles) {
+                    if (jsonData.tilesets[i].tiles.hasOwnProperty(index)) {
+                        var brick = 'brick'; // Default key
+                        try {
+                            brick = jsonData.tilesets[i].tiles[index].image.replace(/(\.([a-zA-Z]+)$)/, '');
+                        }
+                        catch (e) {
+
+                        }
+                        jsonData.tilesets[i].tiles[index].key = brick;
+                        tiles.push(jsonData.tilesets[i].tiles[index]);
+
+                    }
+                }
+            }
+            // Loop through the layers and place bricks
+            var x = startX;
+            var y = startY;
+            for (var i = 0; i < jsonData.layers.length; i++) {
+                for (var j = 0; j < jsonData.layers[i].data.length; j++) {
+
+                    if (j % jsonData.width == 0) {
+                        y += tileHeight;
+                        x = startX;
+                    }
+
+                    var tileIndex = jsonData.layers[i].data[j] - 1;
+                    if (typeof tiles[tileIndex] != 'undefined') {
+                        var brick;
+                        switch (tiles[tileIndex].key) {
+                            case 'brick-star':
+                                brick = new BreakOut.BrickStar();
+                                break;
+                            case 'brick-fire':
+                                brick = new BreakOut.BrickFire();
+                                break;
+                            case 'brick-ice':
+                                brick = new BreakOut.BrickIce();
+                                break;
+                            case 'brick-color-orange':
+                                brick = new BreakOut.BrickColorOrange();
+                                break;
+                            case 'brick-color-red':
+                                brick = new BreakOut.BrickColorRed();
+                                break;
+                            case 'brick-color-purple':
+                                brick = new BreakOut.BrickColorPurple();
+                                break;
+                            case 'brick-sand':
+                                brick = new BreakOut.BrickSand();
+                                break;
+                            case 'brick-stone-003':
+                                brick = new BreakOut.BrickStone();
+                                break;
+                            case 'brick-4-001':
+                                brick = new BreakOut.BrickFourStones();
+                                break;
+                            default:
+                                console.log(tiles[tileIndex].key);
+                                brick = new BreakOut.Brick();
+                        }
+                        brick.init();
+                        brick.add();
+                        brick.object.position.x = x;
+                        brick.object.position.y = y;
+                        BreakOut.totalBricks++;
+                    }
+                    x += tileWidth;
+                }
+            }
+        });
+
+        BreakOut.init();
+
+        this.currentLevel++;
+        if (this.currentLevel > this.levels.length) {
+            this.currentLevel = 0;
         }
     },
     addPlayer: function (id) {
