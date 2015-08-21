@@ -45,6 +45,7 @@ var BreakOut = {
     objects: [],
     currentLevel: 0,
     levels: [
+        'level000.json',
         'level001.json',
         'level002.json'
     ],
@@ -262,6 +263,25 @@ var BreakOut = {
         }
     },
     loadLevel: function () {
+
+        for (var i = 0; i < this.players.length; i++) {
+            var player = this.players[i];
+
+            var yPosBall = -22;
+            if (player.element.team == 'B') {
+                yPosBall = 22;
+            }
+            player.element.ball.object.position.x = player.element.object.position.x;
+            player.element.ball.object.position.y = player.element.object.position.y;
+            player.element.ball.attachtTo = player.element;
+            player.element.ball.attachtToPos = {
+                x: Math.random() * 56 - 28,
+                y: yPosBall
+            };
+            player.element.ball = player.element.ball;
+            player.element.attachedBalls = [];
+            player.element.attachedBalls.push(player.element.ball);
+        }
 
         var file = this.levels[this.currentLevel];
         ajax(BreakOut.settings.assetDir + file, function (jsonData) {
