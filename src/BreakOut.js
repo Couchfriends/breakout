@@ -73,16 +73,23 @@ var BreakOut = {
     },
     scores: [],
     addScore: function (team, score, pos) {
+        if (score == 0) {
+            return;
+        }
         if (typeof this.score[team] != 'undefined') {
             this.score[team] += score;
         }
         if (typeof pos != 'undefined' && typeof pos.x != 'undefined') {
             for (var i = 0; i < this.scores.length; i++) {
                 if (this.scores[i].object.visible == false) {
+                    if (score < 0) {
+                        this.scores[i].fill = this.scores[i].object._style.fill = '#ff0000';
+                    }
                     this.scores[i].object.position.x = pos.x;
                     this.scores[i].object.position.y = pos.y;
                     this.scores[i].object.visible = true;
                     this.scores[i].object.text = score;
+                    this.scores[i].team = team;
                     break;
                 }
             }

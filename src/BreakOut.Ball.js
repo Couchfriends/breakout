@@ -52,10 +52,7 @@ BreakOut.Ball = function (settings) {
             x: -3,
             y: 3
         },
-        maxSpeed: {
-            x: 3,
-            y: 3
-        }
+        maxSpeed: 3
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
 
@@ -103,6 +100,7 @@ BreakOut.Ball.prototype.collision = function (target) {
         var adjustSpeed = false;
         var speed = this.stats.speed;
         var pos = this.object.position;
+        var prevPos = this.prevPosition;
         var posTarget = target.object.position;
         var halfWidth = this.object.width / 2;
         var halfHeight = this.object.height / 2;
@@ -110,43 +108,44 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfHeightTarget = target.object.height / 2;
 
         // top
-        if (pos.y < (posTarget.y - halfHeightTarget - speed.y)) {
+        if (prevPos.y < (posTarget.y - halfHeightTarget - this.stats.maxSpeed)) {
             adjustSpeed = true;
             speed.y *= -1;
             pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
         }
         // bottom
-        else if (pos.y > (posTarget.y + halfHeightTarget + speed.y)) {
+        else if (prevPos.y > (posTarget.y + halfHeightTarget + this.stats.maxSpeed)) {
             adjustSpeed = true;
             speed.y *= -1;
             pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
         }
         // left
-        else if (pos.x < (posTarget.x - halfWidthTarget - speed.x)) {
+        else if (prevPos.x < (posTarget.x - halfWidthTarget - this.stats.maxSpeed)) {
             speed.x *= -1;
             pos.x = (posTarget.x - halfWidthTarget) - halfWidth;
         }
         // right
-        else if (pos.x > (posTarget.x + halfWidthTarget + speed.x)) {
+        else if (prevPos.x > (posTarget.x + halfWidthTarget + this.stats.maxSpeed)) {
             speed.x *= -1;
             pos.x = (posTarget.x + halfWidthTarget) + halfWidth;
         }
         else {
             // probably stuck inside due speed
             // @todo fix me
+            console.log('fix me!');
             if (speed.y > 0) {
-                pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
+                pos.y = (posTarget.y - halfHeightTarget) - halfHeight - this.stats.maxSpeed;
                 speed.y = Math.abs(speed.y);
             }
             else {
-                pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
+                pos.y = (posTarget.y + halfHeightTarget) + halfHeight + this.stats.maxSpeed;
                 speed.y = -(Math.abs(speed.y));
             }
         }
         if (target.name == 'paddle' && adjustSpeed == true) {
             var xPosRelative = posTarget.x - pos.x;
             var percent = 100 / halfWidthTarget * xPosRelative;
-            speed.x = this.stats.maxSpeed.x / 100 * percent;
+            speed.x = (this.stats.maxSpeed / 2) / 100 * percent;
             speed.x *= -1;
         }
         //speed.y = addY;
@@ -178,12 +177,22 @@ BreakOut.Ball.prototype.collision = function (target) {
         this.object.tint = target.color;
         this.team = target.team;
         this.light.color = target.color;
-        var addPercent = (100 / (this.stats.maxSpeed.x + this.stats.maxSpeed.y) * (Math.abs(speed.x) + Math.abs(speed.y)));
-        addPercent = addPercent * .01;
-        if (addPercent < 1) {
-            speed.x *= 1 + addPercent;
-            speed.y *= 1 + addPercent;
-        }
+
+
+        var speedX = this.stats.maxSpeed;
+        var xPosRelative = target.object.position.x - this.object.position.x;
+        var percent = 100 / (target.object.width / 2) * xPosRelative;
+        speedX = speedX / 100 * percent;
+        speedX *= -1;
+        this.stats.speed.x = speedX;
+        //
+        //
+        //var addPercent = (100 / (this.stats.maxSpeed) * (Math.abs(speed.x) + Math.abs(speed.y)));
+        //addPercent = addPercent * .01;
+        //if (addPercent < 1) {
+        //    speed.x *= 1 + addPercent;
+        //    //speed.y *= 1 + addPercent;
+        //}
     }
 
     if (target.name == 'ball') {
@@ -206,31 +215,29 @@ BreakOut.Ball.prototype.collision = function (target) {
             ball2.stats.speed.y += ay;
         }
 
-        if (target.stats.speed.x > target.stats.maxSpeed.x) {
-            target.stats.speed.x = target.stats.maxSpeed.x;
+        target.setToMaxSpeed();
+    }
+    this.setToMaxSpeed();
+};
+
+BreakOut.Ball.prototype.setToMaxSpeed = function () {
+
+    var addSpeed = (this.stats.maxSpeed - (Math.abs(this.stats.speed.x) + Math.abs(this.stats.speed.y)) / 2);
+    if (addSpeed > 0) {
+        if (this.stats.speed.x < 0) {
+            this.stats.speed.x -= addSpeed;
         }
-        else if (target.stats.speed.x < -(target.stats.maxSpeed.x)) {
-            target.stats.speed.x = -(target.stats.maxSpeed.x);
+        else {
+            this.stats.speed.x += addSpeed;
         }
-        if (target.stats.speed.y > target.stats.maxSpeed.y) {
-            target.stats.speed.y = target.stats.maxSpeed.y;
+        if (this.stats.speed.y < 0) {
+            this.stats.speed.y -= addSpeed;
         }
-        else if (target.stats.speed.y < -(target.stats.maxSpeed.y)) {
-            target.stats.speed.y = -(target.stats.maxSpeed.y);
+        else {
+            this.stats.speed.y += addSpeed;
         }
     }
-    if (this.stats.speed.x > this.stats.maxSpeed.x) {
-        this.stats.speed.x = this.stats.maxSpeed.x;
-    }
-    else if (this.stats.speed.x < -(this.stats.maxSpeed.x)) {
-        this.stats.speed.x = -(this.stats.maxSpeed.x);
-    }
-    if (this.stats.speed.y > this.stats.maxSpeed.y) {
-        this.stats.speed.y = this.stats.maxSpeed.y;
-    }
-    else if (this.stats.speed.y < -(this.stats.maxSpeed.y)) {
-        this.stats.speed.y = -(this.stats.maxSpeed.y);
-    }
+
 };
 
 BreakOut.Ball.prototype.update = function (time) {
@@ -259,7 +266,8 @@ BreakOut.Ball.prototype.update = function (time) {
             if (removeScore > 100) {
                 removeScore = 100;
             }
-            BreakOut.score.A = removeScore;
+            //BreakOut.score.A -= removeScore;
+            BreakOut.addScore('A', -removeScore, {x: pos.x, y: pos.y});
             vibrate('A', 250);
         }
         else if (pos.y < radius) {
@@ -269,7 +277,8 @@ BreakOut.Ball.prototype.update = function (time) {
             if (removeScore > 100) {
                 removeScore = 100;
             }
-            BreakOut.score.B = removeScore;
+            BreakOut.addScore('B', -removeScore, {x: pos.x, y: pos.y});
+            //BreakOut.score.B -= removeScore;
             vibrate('B', 250);
         }
         else if (pos.x > (settings.width - radius)) {

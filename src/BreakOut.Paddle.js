@@ -83,18 +83,18 @@ BreakOut.Paddle.prototype.shoot = function () {
             x: 0,
             y: 0
         };
-        var speedY = ball.stats.maxSpeed.y;
-        var speedX = ball.stats.maxSpeed.x;
+        var speedY = ball.stats.maxSpeed / 2;
+        var speedX = ball.stats.maxSpeed / 2;
         if (this.team == 'A') {
-            speedY = -(ball.stats.maxSpeed.y);
+            speedY = -(ball.stats.maxSpeed / 2);
         }
-        // @todo fix calc
         var xPosRelative = this.object.position.x - ball.object.position.x;
         var percent = 100 / (this.object.width / 2) * xPosRelative;
-        speedX = ball.stats.maxSpeed.x / 100 * percent;
+        speedX = speedX / 100 * percent;
         speedX *= -1;
         ball.stats.speed.x = speedX;
         ball.stats.speed.y = speedY;
+        ball.setToMaxSpeed();
     }
     this.attachedBalls = [];
 };
@@ -206,14 +206,14 @@ BreakOut.Paddle.prototype.update = function (time) {
             continue;
         }
         if (this.effects[i].endTimer - BreakOut.timer < 120 && this.effects[i].object != '') {
-            var visible = true;
+            var alpha = 1;
             if (BreakOut.timer % 20 < 5) {
-                visible = false;
+                alpha = .2;
             }
-            this.effects[i].object.visible = visible;
+            this.effects[i].object.alpha = alpha;
         }
         if (this.effects[i].effect == 'freeze') {
-            speedX *= .5;
+            speedX *= .3;
         }
     }
     if (removeEffects.length > 0) {

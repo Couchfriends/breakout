@@ -33,6 +33,7 @@ BreakOut.TextBonus = function (settings) {
 
     this.name = 'text';
     this.text = '0';
+    this.team = 'A';
 
     this.font = 'bold 24px Arial';
     this.fill = '#ff9900';
@@ -50,10 +51,16 @@ BreakOut.TextBonus.prototype.update = function (time) {
         return false;
     }
     this.object.alpha -= .05;
-    this.object.position.y -= 1;
+    if (this.team == 'B') {
+        this.object.position.y += 1;
+    }
+    else {
+        this.object.position.y -= 1;
+    }
     if (this.object.alpha <= 0) {
         this.object.visible = false;
         this.object.alpha = 1;
+        this.fill = this.object._style.fill = '#ff9900';
     }
 
 };

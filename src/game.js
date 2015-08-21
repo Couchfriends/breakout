@@ -158,7 +158,6 @@ COUCHFRIENDS.on('connect', function () {
 
 COUCHFRIENDS.on('playerJoined', function (data) {
     var player = BreakOut.addPlayer(data.id);
-    console.log(player.color);
     var jsonData = {
         topic: 'player',
         action: 'identify',
