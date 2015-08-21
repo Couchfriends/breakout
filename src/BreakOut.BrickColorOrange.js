@@ -35,6 +35,7 @@ BreakOut.BrickColorOrange = function (settings) {
         'brick-color-orange.png'
     ];
     this.score = 20;
+    this.dropChance = 100;
 };
 
 BreakOut.BrickColorOrange.prototype = Object.create(BreakOut.Brick.prototype);

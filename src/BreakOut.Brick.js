@@ -59,7 +59,7 @@ BreakOut.Brick = function (settings) {
      * Drop chance in percent
      * @type {number}
      */
-    this.dropChance = 12;
+    this.dropChance = 5;
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
