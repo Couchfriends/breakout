@@ -100,11 +100,12 @@ BreakOut.Paddle.prototype.shoot = function () {
 };
 
 
+// @todo move this to the effect and add target paddle
 BreakOut.Paddle.prototype.applyEffect = function (effect) {
 
     switch (effect) {
         case 'freeze':
-            var timeout = 240; // in fps
+            var timeout = 320; // in fps
             var effectObject = {
                 effect: 'freeze',
                 endTimer: BreakOut.timer + timeout,
@@ -132,7 +133,7 @@ BreakOut.Paddle.prototype.applyEffect = function (effect) {
             this.effects.push(effectObject);
             break;
         case 'sticky':
-            var timeout = 720; // in fps
+            var timeout = 1200; // in fps
             var effectObject = {
                 effect: 'sticky',
                 endTimer: BreakOut.timer + timeout,

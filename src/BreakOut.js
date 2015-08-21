@@ -47,7 +47,8 @@ var BreakOut = {
     levels: [
         'level000.json',
         'level001.json',
-        'level002.json'
+        'level002.json',
+        'level003.json'
     ],
     /**
      * List with batch operations to execute
