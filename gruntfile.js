@@ -35,6 +35,7 @@ module.exports = function(grunt) {
                     'src/BreakOut.Bonus.js',
                     'src/BreakOut.BonusCoin.js',
                     'src/BreakOut.BonusFreeze.js',
+                    'src/BreakOut.BonusSticky.js',
                     'src/BreakOut.Text.js',
                     'src/BreakOut.TextBonus.js',
                     'src/BreakOut.TextScore.js',

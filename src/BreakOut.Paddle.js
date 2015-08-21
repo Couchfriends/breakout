@@ -46,6 +46,10 @@ BreakOut.Paddle = function () {
     // List of effects that applied to the paddle. Like 'sticky', 'frozen'
     this.effects = [];
 
+    this.ball = '';
+
+    this.attachedBalls = [];
+
 };
 
 BreakOut.Paddle.prototype = Object.create(BreakOut.Element.prototype);
@@ -69,6 +73,32 @@ BreakOut.Paddle.prototype.setSpeed = function (x) {
     this.speed.x = x;
 
 };
+
+BreakOut.Paddle.prototype.shoot = function () {
+
+    for (var i = 0; i < this.attachedBalls.length; i++) {
+        var ball = this.attachedBalls[i];
+        ball.attachtTo = '';
+        ball.attachtToPos = {
+            x: 0,
+            y: 0
+        };
+        var speedY = ball.stats.maxSpeed.y;
+        var speedX = ball.stats.maxSpeed.x;
+        if (this.team == 'A') {
+            speedY = -(ball.stats.maxSpeed.y);
+        }
+        // @todo fix calc
+        var xPosRelative = this.object.position.x - ball.object.position.x;
+        var percent = 100 / (this.object.width / 2) * xPosRelative;
+        speedX = ball.stats.maxSpeed.x / 100 * percent;
+        speedX *= -1;
+        ball.stats.speed.x = speedX;
+        ball.stats.speed.y = speedY;
+    }
+    this.attachedBalls = [];
+};
+
 
 BreakOut.Paddle.prototype.applyEffect = function (effect) {
 
@@ -96,10 +126,36 @@ BreakOut.Paddle.prototype.applyEffect = function (effect) {
                 var object = new PIXI.Sprite(texture);
                 object.anchor.x = .5;
                 object.anchor.y = .5;
-                object.position.y = 8;
                 effectObject.object = object;
                 this.object.addChild(object);
-
+            }
+            this.effects.push(effectObject);
+            break;
+        case 'sticky':
+            var timeout = 720; // in fps
+            var effectObject = {
+                effect: 'sticky',
+                endTimer: BreakOut.timer + timeout,
+                object: ''
+            };
+            var found = false;
+            for (var i = 0; i < this.effects.length; i++) {
+                if (this.effects[i].effect == 'sticky') {
+                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
+                    effectObject.object = this.effects[i].object;
+                    this.effects.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false) {
+                // add freezing effect
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-sticky.png');
+                var object = new PIXI.Sprite(texture);
+                object.anchor.x = .5;
+                object.anchor.y = .5;
+                effectObject.object = object;
+                this.object.addChild(object);
             }
             this.effects.push(effectObject);
             break;
@@ -121,6 +177,9 @@ BreakOut.Paddle.prototype.removeEffect = function (effect) {
     for (var i = 0; i < effect.length; i++) {
         for (var i = 0; i < this.effects.length; i++) {
             if (this.effects[i].effect == effect[i]) {
+                if (effect[i] == 'sticky') {
+                    this.shoot();
+                }
                 // Might wanna do something
                 if (this.effects[i].object != '') {
                     this.object.removeChild(this.effects[i].object);

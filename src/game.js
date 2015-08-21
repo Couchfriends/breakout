@@ -183,6 +183,18 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
 
 });
 
+COUCHFRIENDS.on('playerClick', function (data) {
+
+    var players = BreakOut.players;
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].id == data.id) {
+            players[i].element.shoot();
+            return;
+        }
+    }
+
+});
+
 function vibrate(team, duration) {
     duration = duration || 200;
     for (var i = 0; i < BreakOut.players.length; i++) {

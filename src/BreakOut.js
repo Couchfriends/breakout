@@ -174,13 +174,13 @@ var BreakOut = {
         }
          */
 
-        for (var i = 0; i < 2; i++) {
-            var ball = new BreakOut.Ball({radius: 8});
-            ball.init();
-            ball.object.position.x = 8;
-            ball.object.position.y = this.settings.height / 2;
-            ball.add();
-        }
+        //for (var i = 0; i < 2; i++) {
+        //    var ball = new BreakOut.Ball({radius: 8});
+        //    ball.init();
+        //    ball.object.position.x = 8;
+        //    ball.object.position.y = this.settings.height / 2;
+        //    ball.add();
+        //}
         if (this.settings.debug == true) {
             tmpPlayer = new BreakOut.Paddle();
             tmpPlayer.init();
@@ -188,6 +188,11 @@ var BreakOut = {
             tmpPlayer.object.position.x = BreakOut.settings.width / 2;
             tmpPlayer.object.position.y = 150;
             tmpPlayer.team = 'B';
+            var ball = new BreakOut.Ball({radius: 8});
+            ball.init();
+            ball.object.position.x = 8;
+            ball.object.position.y = this.settings.height / 2;
+            ball.add();
         }
 
         for (var i = 0; i < 5; i++) {
@@ -237,7 +242,7 @@ var BreakOut = {
         scoreTeamB.init();
         scoreTeamB.add();
         scoreTeamB.object.position.x = this.settings.width / 2;
-        scoreTeamB.object.position.y = 30;
+        scoreTeamB.object.position.y = 20;
 
         if (this.settings.debug == false) {
             COUCHFRIENDS.connect();
@@ -248,6 +253,7 @@ var BreakOut = {
         var countB = 0;
         var team = 'A';
         var yPos = this.settings.height - 150;
+        var yPosBall = -22;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].team == 'A') {
                 countA++;
@@ -259,6 +265,7 @@ var BreakOut = {
         if (countA > countB) {
             team = 'B';
             yPos = 150;
+            yPosBall = 22;
         }
         var playerElement = new BreakOut.Paddle();
         var color = playerElement.color;
@@ -273,12 +280,26 @@ var BreakOut = {
             team: team,
             element: playerElement
         };
+
+        var ball = new BreakOut.Ball({radius: 8});
+        ball.init();
+        ball.object.position.x = playerElement.object.position.x;
+        ball.object.position.y = playerElement.object.position.y;
+        ball.add();
+        ball.attachtTo = playerElement;
+        ball.attachtToPos = {
+            x: Math.random() * 56 - 28,
+            y: yPosBall
+        };
+        playerElement.ball = ball;
+        playerElement.attachedBalls.push(ball);
         this.players.push(player);
         return player;
     },
     removePlayer: function (id) {
         for (var i = 0; i < this.players.length; i++) {
             if (id == this.players[i].id) {
+                this.players[i].element.ball.remove();
                 this.players[i].element.remove();
                 this.players.splice(i, 1);
                 return true;

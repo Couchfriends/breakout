@@ -59,6 +59,24 @@ BreakOut.Ball = function (settings) {
     };
     this.collisionList = ['paddle', 'brick', 'ball'];
 
+    /**
+     * Every player that spawns get its own starting ball. So this increased
+     * the difficulty with each player.
+     * @type {object}
+     */
+    this.paddle = '';
+
+    /**
+     * Object wich the ball is attached to.
+     * @type {string}
+     */
+    this.attachtTo = '';
+
+    this.attachtToPos = {
+        x: 0,
+        y: 0
+    };
+
 };
 
 BreakOut.Ball.prototype = Object.create(BreakOut.Element.prototype);
@@ -91,7 +109,6 @@ BreakOut.Ball.prototype.collision = function (target) {
         var halfWidthTarget = target.object.width / 2;
         var halfHeightTarget = target.object.height / 2;
 
-        // @todo fix me (the } else {)
         // top
         if (pos.y < (posTarget.y - halfHeightTarget - speed.y)) {
             adjustSpeed = true;
@@ -116,11 +133,14 @@ BreakOut.Ball.prototype.collision = function (target) {
         }
         else {
             // probably stuck inside due speed
+            // @todo fix me
             if (speed.y > 0) {
                 pos.y = (posTarget.y + halfHeightTarget) + halfHeight;
+                speed.y = Math.abs(speed.y);
             }
             else {
                 pos.y = (posTarget.y - halfHeightTarget) - halfHeight;
+                speed.y = -(Math.abs(speed.y));
             }
         }
         if (target.name == 'paddle' && adjustSpeed == true) {
@@ -132,6 +152,25 @@ BreakOut.Ball.prototype.collision = function (target) {
         //speed.y = addY;
         if (target.name == 'brick') {
             target.damage(this);
+        }
+
+        // Apply ball effects if needed
+        if (target.name == 'paddle' && target.effects.length > 0) {
+            for (var i = 0; i < target.effects.length; i++) {
+                if (target.effects[i].effect == 'sticky') {
+                    this.attachtTo = target;
+                    var yPos = -22;
+                    if (target.team == 'B') {
+                        yPos = 22;
+                    }
+                    this.attachtToPos = {
+                        x: (pos.x - target.object.position.x),
+                        y: yPos
+                    };
+                    target.ball = this;
+                    target.attachedBalls.push(this);
+                }
+            }
         }
     }
 
@@ -205,35 +244,41 @@ BreakOut.Ball.prototype.update = function (time) {
     var speed = this.stats.speed;
     var settings = BreakOut.settings;
 
-    pos.x += speed.x;
-    pos.y += speed.y;
+    if (this.attachtTo != '') {
+        pos.x = this.attachtTo.object.position.x + this.attachtToPos.x;
+        pos.y = this.attachtTo.object.position.y + this.attachtToPos.y;
+    }
+    else {
+        pos.x += speed.x;
+        pos.y += speed.y;
 
-    if (pos.y > (settings.height - radius)) {
-        speed.y = -speed.y;
-        pos.y = (settings.height - radius);
-        var removeScore = Math.floor(BreakOut.score.A * .5);
-        if (removeScore > 100) {
-            removeScore = 100;
+        if (pos.y > (settings.height - radius)) {
+            speed.y = -speed.y;
+            pos.y = (settings.height - radius);
+            var removeScore = Math.floor(BreakOut.score.A * .5);
+            if (removeScore > 100) {
+                removeScore = 100;
+            }
+            BreakOut.score.A = removeScore;
+            vibrate('A', 250);
         }
-        BreakOut.score.A = removeScore;
-        vibrate('A', 250);
-    }
-    else if (pos.y < radius) {
-        speed.y = Math.abs(speed.y);
-        pos.y = radius;
-        var removeScore = Math.floor(BreakOut.score.B * .5);
-        if (removeScore > 100) {
-            removeScore = 100;
+        else if (pos.y < radius) {
+            speed.y = Math.abs(speed.y);
+            pos.y = radius;
+            var removeScore = Math.floor(BreakOut.score.B * .5);
+            if (removeScore > 100) {
+                removeScore = 100;
+            }
+            BreakOut.score.B = removeScore;
+            vibrate('B', 250);
         }
-        BreakOut.score.B = removeScore;
-        vibrate('B', 250);
-    }
-    else if (pos.x > (settings.width - radius)) {
-        speed.x = -speed.x;
-        pos.x = (settings.width - radius);
-    }
-    else if (pos.x < radius) {
-        speed.x = Math.abs(speed.x);
-        pos.x = radius;
+        else if (pos.x > (settings.width - radius)) {
+            speed.x = -speed.x;
+            pos.x = (settings.width - radius);
+        }
+        else if (pos.x < radius) {
+            speed.x = Math.abs(speed.x);
+            pos.x = radius;
+        }
     }
 };
