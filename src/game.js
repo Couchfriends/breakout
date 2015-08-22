@@ -46,19 +46,31 @@ function init() {
     document.getElementById('game').innerHTML = '';
     document.getElementById('game').appendChild(renderer.view);
 
+    if (BreakOut.settings.debug == true) {
+        var levels = [];
+        levels.push('leveldebug.json');
+        for (var i = 0; i < BreakOut.levels.length; i++) {
+            levels.push(BreakOut.levels[i]);
+        }
+        BreakOut.levels = levels;
+    }
 
-    // Levels are build for 1280x520 (720 - (2 * 100)) resolutions. Let's make sure the level is
-    // rendered in the center
+    BreakOut.init();
     BreakOut.loadLevel();
 
-    window.addEventListener('mousemove', function (e) {
-        if (typeof tmpPlayer == 'undefined') {
-            return;
-        }
-        tmpPlayer.object.position.x = e.clientX;
-        mousePos.x = e.clientX;
-        mousePos.y = e.clientY;
-    });
+    if (BreakOut.settings.debug == true) {
+        window.addEventListener('mousemove', function (e) {
+            if (typeof tmpPlayer == 'undefined') {
+                return;
+            }
+            tmpPlayer.object.position.x = e.clientX;
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
+        });
+        window.addEventListener('click', function (e) {
+            tmpPlayer.shoot();
+        });
+    }
     requestAnimationFrame(update);
 }
 

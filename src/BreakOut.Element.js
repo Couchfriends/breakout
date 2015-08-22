@@ -108,6 +108,12 @@ BreakOut.Element.prototype = {
     },
 
     remove: function () {
+        if (this.name == 'brick') {
+            BreakOut.totalBricks--;
+            if (BreakOut.totalBricks <= 0) {
+                BreakOut.loadLevel();
+            }
+        }
         if (this.object != null) {
             stage.removeChild(this.object);
         }

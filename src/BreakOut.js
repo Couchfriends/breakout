@@ -50,10 +50,6 @@ var BreakOut = {
         'level002.json',
         'level003.json'
     ],
-    /**
-     * List with batch operations to execute
-     */
-    batches: [],
     update: function(time) {
         if (this.players.length <= 0 && this.settings.debug == false) {
             return false;
@@ -62,21 +58,6 @@ var BreakOut = {
         for (var i = 0; i < this.objects.length; i++) {
             this.objects[i].update(time);
         }
-        var batches = [];
-        var spliceIndexes = [];
-        for (var i = 0; i < this.batches.length; i++) {
-            switch (this.batches[i].type) {
-                case 'damage':
-                    this.batches[i].object.damage(this.batches[i].ball, this.batches[i].value);
-                    continue;
-                    break;
-                default:
-                    console.log(this.batches[i].type);
-                    continue;
-            }
-            batches.push(this.batches[i]);
-        }
-        this.batches = batches;
     },
     totalBricks: 0, // if zero on destroy next level.
     scores: [],
@@ -121,12 +102,7 @@ var BreakOut = {
             }
             if (this.objects[i].object.position.x >= minX && this.objects[i].object.position.x <= maxX &&
                 this.objects[i].object.position.y >= minY && this.objects[i].object.position.y <= maxY) {
-                this.batches.push({
-                    type: 'damage',
-                    object: this.objects[i],
-                    value: Infinity,
-                    ball: ball
-                });
+                this.objects[i].damage(ball, Infinity);
             }
         }
 
@@ -201,13 +177,15 @@ var BreakOut = {
             tmpPlayer.init();
             tmpPlayer.add();
             tmpPlayer.object.position.x = BreakOut.settings.width / 2;
-            tmpPlayer.object.position.y = 150;
-            tmpPlayer.team = 'B';
-            var ball = new BreakOut.Ball({radius: 8});
-            ball.init();
-            ball.object.position.x = 8;
-            ball.object.position.y = this.settings.height / 2;
-            ball.add();
+            tmpPlayer.object.position.y = BreakOut.settings.height - 150;
+            tmpPlayer.team = 'A';
+            for (var i = 0; i < 2; i++) {
+                var ball = new BreakOut.Ball({radius: 8});
+                ball.init();
+                ball.object.position.x = Math.random() * 64;
+                ball.object.position.y = Math.random() * this.settings.height / 2;
+                ball.add();
+            }
         }
 
         for (var i = 0; i < 5; i++) {
@@ -262,9 +240,17 @@ var BreakOut = {
         if (this.settings.debug == false) {
             COUCHFRIENDS.connect();
         }
+
+        if (window.localStorage) {
+            var level = window.localStorage.getItem('currentLevel');
+            if (level != '' && level >= 0) {
+                this.currentLevel = level;
+            }
+        }
     },
     loadLevel: function () {
 
+        BreakOut.totalBricks = 0;
         for (var i = 0; i < this.players.length; i++) {
             var player = this.players[i];
 
@@ -279,11 +265,10 @@ var BreakOut = {
                 x: Math.random() * 56 - 28,
                 y: yPosBall
             };
-            player.element.ball = player.element.ball;
+            //player.element.ball = player.element.ball;
             player.element.attachedBalls = [];
             player.element.attachedBalls.push(player.element.ball);
         }
-
         var file = this.levels[this.currentLevel];
         ajax(BreakOut.settings.assetDir + file, function (jsonData) {
             jsonData = JSON.parse(jsonData);
@@ -369,11 +354,12 @@ var BreakOut = {
             }
         });
 
-        BreakOut.init();
-
         this.currentLevel++;
         if (this.currentLevel > this.levels.length) {
             this.currentLevel = 0;
+        }
+        if (window.localStorage) {
+            var level = window.localStorage.setItem('currentLevel', this.currentLevel);
         }
     },
     addPlayer: function (id) {

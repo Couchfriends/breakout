@@ -127,9 +127,5 @@ BreakOut.Brick.prototype.remove = function () {
     }
 
     BreakOut.Element.prototype.remove.call(this);
-    BreakOut.totalBricks--;
-    if (BreakOut.totalBricks <= 0) {
-        BreakOut.loadLevel();
-    }
 
 };
