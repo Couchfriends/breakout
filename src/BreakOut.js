@@ -269,6 +269,9 @@ var BreakOut = {
             player.element.attachedBalls = [];
             player.element.attachedBalls.push(player.element.ball);
         }
+        if (typeof this.levels[this.currentLevel] == 'undefined') {
+            this.currentLevel = 0;
+        }
         var file = this.levels[this.currentLevel];
         ajax(BreakOut.settings.assetDir + file, function (jsonData) {
             jsonData = JSON.parse(jsonData);
@@ -354,12 +357,13 @@ var BreakOut = {
             }
         });
 
+        if (window.localStorage) {
+            window.localStorage.setItem('currentLevel', this.currentLevel);
+        }
+
         this.currentLevel++;
         if (this.currentLevel > this.levels.length) {
             this.currentLevel = 0;
-        }
-        if (window.localStorage) {
-            var level = window.localStorage.setItem('currentLevel', this.currentLevel);
         }
     },
     addPlayer: function (id) {
