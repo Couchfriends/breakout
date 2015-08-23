@@ -223,7 +223,7 @@ BreakOut.Ball.prototype.collision = function (target) {
 BreakOut.Ball.prototype.setToMaxSpeed = function () {
 
     var addSpeed = (this.stats.maxSpeed - (Math.abs(this.stats.speed.x) + Math.abs(this.stats.speed.y)) / 2);
-    if (addSpeed > 0) {
+    if (addSpeed != 0) {
         if (this.stats.speed.x < 0) {
             this.stats.speed.x -= addSpeed;
         }
