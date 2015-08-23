@@ -177,6 +177,7 @@ BreakOut.Ball.prototype.collision = function (target) {
         this.object.tint = target.color;
         this.team = target.team;
         this.light.color = target.color;
+        this.color = target.color;
 
 
         var speedX = this.stats.maxSpeed;
@@ -236,6 +237,9 @@ BreakOut.Ball.prototype.setToMaxSpeed = function () {
         else {
             this.stats.speed.y += addSpeed;
         }
+    }
+    if (this.stats.speed.y > -.2 && this.stats.speed.y < .2) {
+        this.stats.speed.y = .1
     }
 
 };

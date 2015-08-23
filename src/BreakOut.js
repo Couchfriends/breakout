@@ -28,7 +28,7 @@ var BreakOut = {
      * Game width and height
      */
     settings: {
-        debug: false,
+        debug: true,
         width: 1280,
         height: 720,
         assetDir: 'assets/',
@@ -115,6 +115,26 @@ var BreakOut = {
             }
         }
     },
+    pickups: [],
+    addPickupEffect: function (pos, team, color) {
+        team = team || '';
+        if (typeof pos == 'undefined' || typeof pos != 'object') {
+            return;
+        }
+
+        for (var i = 0; i < this.pickups.length; i++) {
+            if (this.pickups[i].object.visible == false) {
+                if (typeof color != 'undefined') {
+                    this.pickups[i].setColor(color);
+                }
+                this.pickups[i].team = team;
+                this.pickups[i].object.position.x = pos.x;
+                this.pickups[i].object.position.y = pos.y;
+                this.pickups[i].object.visible = true;
+                break;
+            }
+        }
+    },
     init: function () {
 
         var backgroundWidth = 256;
@@ -193,6 +213,13 @@ var BreakOut = {
             explosion.init();
             explosion.add();
             BreakOut.explosions.push(explosion);
+        }
+
+        for (var i = 0; i < 5; i++) {
+            var pickup = new BreakOut.EffectPickup();
+            pickup.init();
+            pickup.add();
+            BreakOut.pickups.push(pickup);
         }
 
         for (var i = 0; i < 5; i++) {
