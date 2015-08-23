@@ -59,6 +59,8 @@ BreakOut.BonusCoin = function (settings) {
 
     this.score = 100;
 
+    this.color = 0xfff600;
+
 };
 
 BreakOut.BonusCoin.prototype = Object.create(BreakOut.Bonus.prototype);
@@ -68,7 +70,7 @@ BreakOut.BonusCoin.prototype.init = function (settings) {
     BreakOut.Bonus.prototype.init.call(this, settings);
 
     if (BreakOut.settings.lighting == true) {
-        var color = 0xfefaeb;
+        var color = this.color;
         this.light = new PIXI.lights.PointLight(color, .5);
         this.object.addChild(this.light);
     }

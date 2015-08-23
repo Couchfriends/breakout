@@ -127,11 +127,14 @@ BreakOut.Bonus.prototype.collision = function (target) {
         if (this.effect != '') {
             target.applyEffect(this.effect);
         }
-
-        BreakOut.addPickupEffect({
-            x: this.object.position.x,
-            y: this.object.position.y
-        }, this.team, this.color);
+        BreakOut.addPickupEffect(
+            {
+                x: this.object.position.x,
+                y: this.object.position.y
+            },
+            this.team,
+            this.color
+        );
     }
     this.remove();
 };

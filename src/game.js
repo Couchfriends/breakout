@@ -29,12 +29,17 @@ if (typeof COUCHFRIENDS == 'undefined') {
 if (typeof BreakOut == 'undefined') {
     console.warn('This game needs the BreakOut object in order to work.');
 }
-var renderer, stage, players = [], tmpPlayer, mousePos = {
+var renderer, stage, players = [], tmpPlayer = '', mousePos = {
     x: 0,
     y: 0
-}, light = {};
+}, light = {}, mouseHideTimeOut;
+
+function hideCursor() {
+    document.body.style.cursor = 'url(assets/empty-cursor.png), auto';
+}
 window.onload = init;
 function init() {
+    mouseHideTimeOut = setTimeout(hideCursor, 2000);
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 800);
     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 600);
     BreakOut.settings.width = w;
@@ -45,6 +50,7 @@ function init() {
     stage = new PIXI.Container();
     document.getElementById('game').innerHTML = '';
     document.getElementById('game').appendChild(renderer.view);
+
 
     if (BreakOut.settings.debug == true) {
         var levels = [];
@@ -58,19 +64,25 @@ function init() {
     BreakOut.init();
     BreakOut.loadLevel();
 
-    if (BreakOut.settings.debug == true) {
-        window.addEventListener('mousemove', function (e) {
-            if (typeof tmpPlayer == 'undefined') {
-                return;
-            }
-            tmpPlayer.object.position.x = e.clientX;
-            mousePos.x = e.clientX;
-            mousePos.y = e.clientY;
-        });
-        window.addEventListener('click', function (e) {
+    document.body.addEventListener('mousemove', function (e) {
+        document.body.style.cursor = 'default';
+        clearTimeout(mouseHideTimeOut);
+        mouseHideTimeOut = setTimeout(hideCursor, 2000);
+        if (tmpPlayer == '') {
+            return;
+        }
+        tmpPlayer.object.position.x = e.clientX;
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+    });
+    document.body.addEventListener('click', function (e) {
+        document.body.style.cursor = 'default';
+        clearTimeout(mouseHideTimeOut);
+        mouseHideTimeOut = setTimeout(hideCursor, 2000);
+        if (tmpPlayer != '') {
             tmpPlayer.shoot();
-        });
-    }
+        }
+    });
     requestAnimationFrame(update);
 }
 
