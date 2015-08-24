@@ -28,7 +28,7 @@ var BreakOut = {
      * Game width and height
      */
     settings: {
-        debug: false,
+        debug: true,
         width: 1280,
         height: 720,
         assetDir: 'assets/',
@@ -223,7 +223,7 @@ var BreakOut = {
             tmpPlayer.object.position.y = BreakOut.settings.height - 150;
             tmpPlayer.team = 'A';
             for (var i = 0; i < 2; i++) {
-                var ball = new BreakOut.Ball({radius: 8});
+                var ball = new BreakOut.Ball();
                 ball.init();
                 ball.object.position.x = Math.random() * 64;
                 ball.object.position.y = Math.random() * this.settings.height / 2;
@@ -456,7 +456,7 @@ var BreakOut = {
             element: playerElement
         };
 
-        var ball = new BreakOut.Ball({radius: 8});
+        var ball = new BreakOut.Ball();
         ball.init();
         ball.object.position.x = playerElement.object.position.x;
         ball.object.position.y = playerElement.object.position.y;

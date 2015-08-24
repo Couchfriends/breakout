@@ -35,8 +35,6 @@ BreakOut.BrickColorOrange = function (settings) {
         'brick-color-orange.png'
     ];
 
-    this.normalTexture = 'brick-color-normal.png';
-
     this.score = 20;
     this.dropChance = 100;
 };

@@ -29,6 +29,7 @@
  */
 BreakOut.Ball = function (settings) {
 
+    settings = settings || {};
     BreakOut.Element.call(this, settings);
 
     this.name = 'ball';
@@ -43,7 +44,7 @@ BreakOut.Ball = function (settings) {
 
     this.stats = {
         damage: 1,
-        radius: settings.radius || 8,
+        radius: settings.radius || 8.5,
         prevPosition: {
             x: 0,
             y: 0
@@ -265,7 +266,7 @@ BreakOut.Ball.prototype.setToMaxSpeed = function () {
         }
     }
     if (this.stats.speed.y > -.2 && this.stats.speed.y < .2) {
-        this.stats.speed.y = .1
+        this.stats.speed.y = .2
     }
 
 };
@@ -280,6 +281,17 @@ BreakOut.Ball.prototype.update = function (time) {
     var radius = this.stats.radius;
     var speed = this.stats.speed;
     var settings = BreakOut.settings;
+
+    var removeEffects = [];
+    for (var i = 0; i < this.effects.length; i++) {
+        if (this.effects[i].endTimer < BreakOut.timer) {
+            removeEffects.push(this.effects[i].effect);
+
+        }
+    }
+    if (removeEffects.length > 0) {
+        this.removeEffect(removeEffects);
+    }
 
     if (this.hasFire == true && BreakOut.timer % 15 == 0) {
         BreakOut.addSparkleEffect({x: pos.x, y: pos.y}, 0xff0000);

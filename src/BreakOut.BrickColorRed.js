@@ -37,7 +37,6 @@ BreakOut.BrickColorRed = function (settings) {
 
     this.bonuses.push('bonus-fire');
 
-    this.normalTexture = 'brick-color-normal.png';
     this.score = 20;
     this.dropChance = 100;
 };
