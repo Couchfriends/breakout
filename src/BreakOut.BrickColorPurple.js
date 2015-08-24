@@ -36,7 +36,7 @@ BreakOut.BrickColorPurple = function (settings) {
     ];
 
     this.score = 20;
-    this.dropChance = 100;
+    this.dropChance = 50;
 };
 
 BreakOut.BrickColorPurple.prototype = Object.create(BreakOut.Brick.prototype);

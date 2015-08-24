@@ -38,7 +38,7 @@ BreakOut.BrickColorRed = function (settings) {
     this.bonuses.push('bonus-fire');
 
     this.score = 20;
-    this.dropChance = 100;
+    this.dropChance = 50;
 };
 
 BreakOut.BrickColorRed.prototype = Object.create(BreakOut.Brick.prototype);
