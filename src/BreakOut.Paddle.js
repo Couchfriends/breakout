@@ -62,9 +62,11 @@ BreakOut.Paddle.prototype.init = function (settings) {
     //this.object.normalTexture = normalMapTexture;
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
-    var ballLight = new PIXI.lights.PointLight(this.color, 1);
+    if (BreakOut.settings.lighting == true) {
+        var paddleLight = new PIXI.lights.PointLight(this.color, 1);
+        this.object.addChild(paddleLight);
+    }
     this.object.tint = this.color;
-    this.object.addChild(ballLight);
 
 };
 

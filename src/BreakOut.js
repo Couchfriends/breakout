@@ -150,6 +150,11 @@ var BreakOut = {
             }
         }
 
+        if (this.settings.lighting == true) {
+            var AmbientLight = new PIXI.lights.AmbientLight(0xffffff, .3);
+            stage.addChild(AmbientLight);
+        }
+
         // Bottom wall
         /*
         var decoI = 32;

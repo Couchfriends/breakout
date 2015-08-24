@@ -42,10 +42,11 @@ BreakOut.Brick = function (settings) {
         'brick.png'
     ];
 
+
     this.team = 'A';
 
     this.score = 10;
-
+    this.normalTexture = '';
     /**
      * List of bonuses that can be spawned
      * @type {Array}
@@ -71,8 +72,10 @@ BreakOut.Brick.prototype.init = function (settings) {
     }
     this.object = new PIXI.Sprite();
     this.object.texture = this.textures[this.textures.length - 1];
-    //var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + "brick-normal.png");
-    //this.object.normalTexture = normalMapTexture;
+    if (this.normalTexture != '' && BreakOut.settings.lighting == true) {
+        var normalMapTexture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.normalTexture);
+        this.object.normalTexture = normalMapTexture;
+    }
     this.object.anchor.x = .5;
     this.object.anchor.y = .5;
 

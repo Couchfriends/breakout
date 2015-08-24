@@ -34,6 +34,7 @@ BreakOut.BrickSand = function (settings) {
     this.textures = [
         'brick-sand.png'
     ];
+
 };
 
 BreakOut.BrickSand.prototype = Object.create(BreakOut.Brick.prototype);
