@@ -125,7 +125,7 @@ BreakOut.Bonus.prototype.collision = function (target) {
             BreakOut.addScore(this.team, this.score, this.object.position);
         }
         if (this.effect != '') {
-            target.applyEffect(this.effect);
+            target.applyEffect(this.effect, true);
         }
         BreakOut.addPickupEffect(
             {

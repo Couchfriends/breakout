@@ -54,7 +54,8 @@ BreakOut.Brick = function (settings) {
     this.bonuses = [
         'bonus-coin',
         'bonus-freeze',
-        'bonus-sticky'
+        'bonus-sticky',
+        'bonus-fire'
     ];
     /**
      * Drop chance in percent
@@ -117,6 +118,9 @@ BreakOut.Brick.prototype.remove = function () {
                 break;
             case 'bonus-sticky':
                 bonus = new BreakOut.BonusSticky();
+                break;
+            case 'bonus-fire':
+                bonus = new BreakOut.BonusFire();
                 break;
             default:
                 console.log(bonus);

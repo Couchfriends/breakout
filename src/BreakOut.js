@@ -135,6 +135,24 @@ var BreakOut = {
             }
         }
     },
+    sparkles: [],
+    addSparkleEffect: function (pos, color) {
+        if (typeof pos == 'undefined' || typeof pos != 'object') {
+            return;
+        }
+
+        for (var i = 0; i < this.sparkles.length; i++) {
+            if (this.sparkles[i].object.visible == false) {
+                if (typeof color != 'undefined') {
+                    this.sparkles[i].setColor(color);
+                }
+                this.sparkles[i].object.position.x = pos.x;
+                this.sparkles[i].object.position.y = pos.y;
+                this.sparkles[i].object.visible = true;
+                break;
+            }
+        }
+    },
     init: function () {
 
         var backgroundWidth = 256;
@@ -225,6 +243,13 @@ var BreakOut = {
             pickup.init();
             pickup.add();
             BreakOut.pickups.push(pickup);
+        }
+
+        for (var i = 0; i < 10; i++) {
+            var sparkle = new BreakOut.EffectSparkles();
+            sparkle.init();
+            sparkle.add();
+            BreakOut.sparkles.push(sparkle);
         }
 
         for (var i = 0; i < 5; i++) {

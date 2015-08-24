@@ -69,6 +69,8 @@ BreakOut.Ball = function (settings) {
      */
     this.attachtTo = '';
 
+    this.hasFire = false;
+
     this.attachtToPos = {
         x: 0,
         y: 0
@@ -95,7 +97,9 @@ BreakOut.Ball.prototype.init = function (settings) {
 BreakOut.Ball.prototype.collision = function (target) {
 
     // Get the direction of the bounce
-    if (target.name == 'paddle' || target.name == 'brick') {
+    var adjustSpeed = false;
+
+    if (target.name == 'paddle' || (target.name == 'brick' && this.hasFire == false)) {
 
         var adjustSpeed = false;
         var speed = this.stats.speed;
@@ -142,33 +146,38 @@ BreakOut.Ball.prototype.collision = function (target) {
                 speed.y = -(Math.abs(speed.y));
             }
         }
-        if (target.name == 'paddle' && adjustSpeed == true) {
-            var xPosRelative = posTarget.x - pos.x;
-            var percent = 100 / halfWidthTarget * xPosRelative;
-            speed.x = (this.stats.maxSpeed / 2) / 100 * percent;
-            speed.x *= -1;
-        }
-        //speed.y = addY;
-        if (target.name == 'brick') {
-            target.damage(this);
-        }
 
-        // Apply ball effects if needed
-        if (target.name == 'paddle' && target.effects.length > 0) {
-            for (var i = 0; i < target.effects.length; i++) {
-                if (target.effects[i].effect == 'sticky') {
-                    this.attachtTo = target;
-                    var yPos = -22;
-                    if (target.team == 'B') {
-                        yPos = 22;
-                    }
-                    this.attachtToPos = {
-                        x: (pos.x - target.object.position.x),
-                        y: yPos
-                    };
-                    target.ball = this;
-                    target.attachedBalls.push(this);
+    }
+
+    if (target.name == 'paddle' && adjustSpeed == true) {
+        var xPosRelative = posTarget.x - pos.x;
+        var percent = 100 / halfWidthTarget * xPosRelative;
+        speed.x = (this.stats.maxSpeed / 2) / 100 * percent;
+        speed.x *= -1;
+    }
+    //speed.y = addY;
+    if (target.name == 'brick') {
+        target.damage(this);
+    }
+
+    // Apply ball effects if needed
+    if (target.name == 'paddle' && target.effects.length > 0) {
+        for (var i = 0; i < target.effects.length; i++) {
+            if (target.effects[i].effect == 'sticky') {
+                this.attachtTo = target;
+                var yPos = -22;
+                if (target.team == 'B') {
+                    yPos = 22;
                 }
+                this.attachtToPos = {
+                    x: (pos.x - target.object.position.x),
+                    y: yPos
+                };
+                target.ball = this;
+                target.attachedBalls.push(this);
+            }
+            else if (target.effects[i].effect == 'fire') {
+                this.applyEffect('fire');
             }
         }
     }
@@ -178,7 +187,6 @@ BreakOut.Ball.prototype.collision = function (target) {
         this.team = target.team;
         this.light.color = target.color;
         this.color = target.color;
-
 
         var speedX = this.stats.maxSpeed;
         var xPosRelative = target.object.position.x - this.object.position.x;
@@ -221,6 +229,24 @@ BreakOut.Ball.prototype.collision = function (target) {
     this.setToMaxSpeed();
 };
 
+BreakOut.Ball.prototype.applyEffect = function (effect, applyVisual) {
+
+    BreakOut.Element.prototype.applyEffect.call(this, effect, applyVisual);
+
+    if (effect == 'fire') {
+        this.hasFire = true;
+    }
+};
+
+BreakOut.Ball.prototype.removeEffect = function (effect) {
+
+    BreakOut.Element.prototype.removeEffect.call(this, effect);
+
+    if (effect == 'fire') {
+        this.hasFire = false;
+    }
+};
+
 BreakOut.Ball.prototype.setToMaxSpeed = function () {
 
     var addSpeed = (this.stats.maxSpeed - (Math.abs(this.stats.speed.x) + Math.abs(this.stats.speed.y)) / 2);
@@ -254,6 +280,10 @@ BreakOut.Ball.prototype.update = function (time) {
     var radius = this.stats.radius;
     var speed = this.stats.speed;
     var settings = BreakOut.settings;
+
+    if (this.hasFire == true && BreakOut.timer % 15 == 0) {
+        BreakOut.addSparkleEffect({x: pos.x, y: pos.y}, 0xff0000);
+    }
 
     if (this.attachtTo != '') {
         pos.x = this.attachtTo.object.position.x + this.attachtToPos.x;

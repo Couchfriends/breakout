@@ -48,6 +48,9 @@ BreakOut.Element = function (settings) {
 
     this.collisionList = [];
 
+
+    this.effects = [];
+
     this.texture = '';
     this.textures = [];
     this.animationSpeed = 0; // Increase to animate this.textures;
@@ -172,4 +175,139 @@ BreakOut.Element.prototype = {
         return false;
     }
 
+};
+
+// @todo move this to the effect and add target paddle
+BreakOut.Element.prototype.applyEffect = function (effect, applyVisual) {
+
+    applyVisual = applyVisual || false;
+    switch (effect) {
+        case 'freeze':
+            var timeout = 320; // in fps
+            var effectObject = {
+                effect: 'freeze',
+                endTimer: BreakOut.timer + timeout,
+                object: ''
+            };
+            var found = false;
+            for (var i = 0; i < this.effects.length; i++) {
+                if (this.effects[i].effect == 'freeze') {
+                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
+                    effectObject.object = this.effects[i].object;
+                    if (effectObject.object != '') {
+                        effectObject.object.alpha = 1;
+                    }
+                    this.effects.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false && applyVisual) {
+                // add freezing effect
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-freeze.png');
+                var object = new PIXI.Sprite(texture);
+                object.alpha = 1;
+                object.anchor.x = .5;
+                object.anchor.y = .5;
+                effectObject.object = object;
+                this.object.addChild(object);
+            }
+            this.effects.push(effectObject);
+            break;
+        case 'sticky':
+            var timeout = 1200; // in fps
+            var effectObject = {
+                effect: 'sticky',
+                endTimer: BreakOut.timer + timeout,
+                object: ''
+            };
+            var found = false;
+            for (var i = 0; i < this.effects.length; i++) {
+                if (this.effects[i].effect == 'sticky') {
+                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
+                    effectObject.object = this.effects[i].object;
+                    if (effectObject.object != '') {
+                        effectObject.object.alpha = 1;
+                    }
+                    this.effects.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false && applyVisual) {
+                // add freezing effect
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-sticky.png');
+                var object = new PIXI.Sprite(texture);
+                object.alpha = 1;
+                object.anchor.x = .5;
+                object.anchor.y = .5;
+                effectObject.object = object;
+                this.object.addChild(object);
+            }
+            this.effects.push(effectObject);
+            break;
+        case 'fire':
+            var timeout = 400; // in fps
+            var effectObject = {
+                effect: 'fire',
+                endTimer: BreakOut.timer + timeout,
+                object: ''
+            };
+            var found = false;
+            for (var i = 0; i < this.effects.length; i++) {
+                if (this.effects[i].effect == 'fire') {
+                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
+                    effectObject.object = this.effects[i].object;
+                    if (effectObject.object != '') {
+                        effectObject.object.alpha = 1;
+                    }
+                    this.effects.splice(i, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false && applyVisual) {
+                // add freezing effect
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-fire.png');
+                var object = new PIXI.Sprite(texture);
+                object.alpha = 1;
+                object.anchor.x = .5;
+                object.anchor.y = .5;
+                effectObject.object = object;
+                this.object.addChild(object);
+            }
+            this.effects.push(effectObject);
+            break;
+        default:
+            console.log(effect);
+    }
+
+};
+
+/**
+ * Remove one or more effects
+ */
+BreakOut.Element.prototype.removeEffect = function (effect) {
+
+    var effects = [];
+    if (typeof effect == 'string') {
+        effect = [effect];
+    }
+    for (var i = 0; i < effect.length; i++) {
+        for (var i = 0; i < this.effects.length; i++) {
+            if (this.effects[i].effect == effect[i]) {
+                if (effect[i] == 'sticky') {
+                    this.shoot();
+                }
+                // Might wanna do something
+                if (this.effects[i].object != '') {
+                    this.effects[i].object.alpha = 0;
+                    this.object.removeChild(this.effects[i].object);
+                }
+                continue;
+            }
+            effects.push(this.effects[i]);
+        }
+    }
+    this.effects = effects;
 };

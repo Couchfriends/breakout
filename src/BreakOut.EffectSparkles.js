@@ -27,50 +27,43 @@
  * Brick object
  * @constructor
  */
-BreakOut.EffectPickup = function (settings) {
+BreakOut.EffectSparkles = function (settings) {
 
     BreakOut.Element.call(this, settings);
 
-    this.textures = ['bonus-powerup-particle.png'];
     this.light = {};
-    this.speed = {
-        x: 5 + Math.random() * 10
-    };
-    this.team = '';
     this.children = [];
 };
 
-BreakOut.EffectPickup.prototype = Object.create(BreakOut.Element.prototype);
+BreakOut.EffectSparkles.prototype = Object.create(BreakOut.Element.prototype);
 
-BreakOut.EffectPickup.prototype.init = function (settings) {
+BreakOut.EffectSparkles.prototype.init = function (settings) {
 
     this.object = new PIXI.Graphics();
     this.object.beginFill(0xffffff, 0);
     this.object.drawRect(0, 0, 1, 1);
     this.object.visible = false;
 
-    var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.textures[0]);
-    for (var i = 0; i < 3; i++) {
-        var child = new PIXI.Sprite(texture);
-        child.light = {};
-        child.anchor.x = .5;
-        child.anchor.y = .5;
-        child.speedX = -1 + (Math.random() * 2);
-        child.speedY = 1 + (Math.random() * 4);
+    if (BreakOut.settings.lighting == true) {
+        //var color = 0xffffff;
+        //this.light = new PIXI.lights.PointLight(color, 1);
+        //this.object.addChild(this.light);
+    }
+
+    for (var i = 0; i < 5; i++) {
+        var child = new PIXI.Graphics();
+        child.beginFill(0xffffff, 1);
+        child.drawCircle(0, 0, Math.random() * 2);
+        child.speedX = -2 + (Math.random() * 4);
+        child.speedY = -2 + (Math.random() * 4);
 
         this.object.addChild(child);
         this.children.push(child);
     }
 
-    if (BreakOut.settings.lighting == true) {
-        var color = 0xffffff;
-        this.light = new PIXI.lights.PointLight(color, 1);
-        this.object.addChild(this.light);
-    }
-
 };
 
-BreakOut.EffectPickup.prototype.setColor = function (color) {
+BreakOut.EffectSparkles.prototype.setColor = function (color) {
 
     if (color == null || color == '') {
         return false;
@@ -79,32 +72,24 @@ BreakOut.EffectPickup.prototype.setColor = function (color) {
         this.children[i].tint = color;
     }
     if (BreakOut.settings.lighting == true) {
-        this.light.color = color;
+        //this.light.color = color;
     }
 };
 
-BreakOut.EffectPickup.prototype.update = function (time) {
+BreakOut.EffectSparkles.prototype.update = function (time) {
 
     if (!BreakOut.Element.prototype.update.call(this, time)) {
         return false;
     }
-    var yAdd = 0;
     for (var i = 0; i < this.children.length; i++) {
 
-        yAdd = 0;
-        if (this.team == 'A') {
-            yAdd = -(this.object.alpha * this.children[i].speedY);
-        }
-        else {
-            yAdd = this.object.alpha * this.children[i].speedY;
-        }
-
-        this.children[i].position.x += this.children[i].speedX;
+        var yAdd = this.object.alpha * this.children[i].speedY;
+        var xAdd = this.object.alpha * this.children[i].speedX;
+        this.children[i].position.x += xAdd;
         this.children[i].position.y += yAdd;
     }
     if (BreakOut.settings.lighting == true) {
-        this.light.brightness *= .95;
-        this.light.position.y += yAdd;
+        //this.light.brightness *= .95;
     }
 
     this.object.alpha *= .95;
@@ -115,11 +100,10 @@ BreakOut.EffectPickup.prototype.update = function (time) {
             this.children[i].position.x = 0;
             this.children[i].position.y = 0;
         }
-        this.team = '';
         this.object.visible = false;
-    }
-    if (BreakOut.settings.lighting == true) {
-        this.light.brightness = 1;
+        if (BreakOut.settings.lighting == true) {
+            this.light.brightness = 1;
+        }
     }
 
 };
