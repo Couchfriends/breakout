@@ -52,7 +52,6 @@ BreakOut.EffectPickup.prototype.init = function (settings) {
     var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + this.textures[0]);
     for (var i = 0; i < 3; i++) {
         var child = new PIXI.Sprite(texture);
-        child.light = {};
         child.anchor.x = .5;
         child.anchor.y = .5;
         child.speedX = -1 + (Math.random() * 2);
@@ -64,7 +63,7 @@ BreakOut.EffectPickup.prototype.init = function (settings) {
 
     if (BreakOut.settings.lighting == true) {
         var color = 0xffffff;
-        this.light = new PIXI.lights.PointLight(color, 1);
+        this.light = new PIXI.lights.PointLight(color, 2);
         this.object.addChild(this.light);
     }
 
@@ -104,10 +103,9 @@ BreakOut.EffectPickup.prototype.update = function (time) {
     }
     if (BreakOut.settings.lighting == true) {
         this.light.brightness *= .95;
-        this.light.position.y += yAdd;
     }
 
-    this.object.alpha *= .95;
+    this.object.alpha *= .96;
     if (this.object.alpha < .1) {
         this.object.alpha = 1;
         this.setColor(0xffffff);
@@ -117,9 +115,9 @@ BreakOut.EffectPickup.prototype.update = function (time) {
         }
         this.team = '';
         this.object.visible = false;
-    }
-    if (BreakOut.settings.lighting == true) {
-        this.light.brightness = 1;
+        if (BreakOut.settings.lighting == true) {
+            this.light.brightness = 2;
+        }
     }
 
 };

@@ -34,8 +34,10 @@ BreakOut.AssetBackground = function (settings) {
     this.name = 'background';
 
     settings = settings || {};
-    settings.texture = settings.texture || 'tiled-background.png';
-    settings.normalTexture = settings.normalTexture || 'tiled-background-normal.png';
+    //settings.texture = settings.texture || 'tiled-background.png';
+    //settings.normalTexture = settings.normalTexture || 'tiled-background-normal.png';
+    settings.texture = settings.texture || 'background.png';
+    settings.normalTexture = settings.normalTexture || 'background-normal.png';
 
     this.texture = settings.texture;
     this.normalTexture = settings.normalTexture;

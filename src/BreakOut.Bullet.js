@@ -55,7 +55,7 @@ BreakOut.Bullet.prototype.init = function (settings) {
 
     if (BreakOut.settings.lighting == true) {
         var color = 0xffff00;
-        this.light = new PIXI.lights.PointLight(color, .2, 32);
+        this.light = new PIXI.lights.PointLight(color, .2);
         this.object.addChild(this.light);
     }
 
