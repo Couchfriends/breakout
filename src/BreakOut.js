@@ -28,7 +28,7 @@ var BreakOut = {
      * Game width and height
      */
     settings: {
-        debug: false,
+        debug: true,
         width: 1280,
         height: 720,
         assetDir: 'assets/',
@@ -88,7 +88,7 @@ var BreakOut = {
      * List with explosions that can be added to the scene
      */
     explosions: [],
-    addExplosion: function (pos, range, ball) {
+    addExplosion: function (pos, range, team) {
 
         // find bricks in range...
         var minX = pos.x - range;
@@ -102,7 +102,7 @@ var BreakOut = {
             }
             if (this.objects[i].object.position.x >= minX && this.objects[i].object.position.x <= maxX &&
                 this.objects[i].object.position.y >= minY && this.objects[i].object.position.y <= maxY) {
-                this.objects[i].damage(ball.team, 1);
+                this.objects[i].damage(team, 1);
             }
         }
 

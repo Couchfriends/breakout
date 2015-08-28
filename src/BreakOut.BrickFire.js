@@ -40,9 +40,9 @@ BreakOut.BrickFire = function (settings) {
 
 BreakOut.BrickFire.prototype = Object.create(BreakOut.Brick.prototype);
 
-BreakOut.BrickFire.prototype.damage = function (ball) {
+BreakOut.BrickFire.prototype.damage = function (team) {
 
-    BreakOut.Brick.prototype.damage.call(this, ball);
-    BreakOut.addExplosion(this.object.position, this.range, ball);
+    BreakOut.Brick.prototype.damage.call(this, team);
+    BreakOut.addExplosion(this.object.position, this.range, team);
 
 };
