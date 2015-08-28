@@ -55,13 +55,14 @@ BreakOut.Brick = function (settings) {
         'bonus-coin',
         'bonus-freeze',
         'bonus-sticky',
-        'bonus-fire'
+        'bonus-fire',
+        'bonus-shoot'
     ];
     /**
      * Drop chance in percent
      * @type {number}
      */
-    this.dropChance = 5;
+    this.dropChance = 115;
 };
 
 BreakOut.Brick.prototype = Object.create(BreakOut.Element.prototype);
@@ -82,14 +83,14 @@ BreakOut.Brick.prototype.init = function (settings) {
 
 };
 
-BreakOut.Brick.prototype.damage = function (ball, damage) {
+BreakOut.Brick.prototype.damage = function (team, damage) {
 
-    var damage = damage || ball.stats.damage;
-    this.team = ball.team;
+    var damage = damage || 1;
+    this.team = team;
     var newTexture = this.textures.indexOf(this.object.texture) - damage;
     if (typeof this.textures[newTexture] == 'undefined') {
         BreakOut.addScore(
-            ball.team,
+            team,
             this.score,
             {
                 x: this.object.position.x,
@@ -121,6 +122,9 @@ BreakOut.Brick.prototype.remove = function () {
                 break;
             case 'bonus-fire':
                 bonus = new BreakOut.BonusFire();
+                break;
+            case 'bonus-shoot':
+                bonus = new BreakOut.BonusShoot();
                 break;
             default:
                 console.log(bonus);

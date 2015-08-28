@@ -27,7 +27,7 @@
  * Brick object
  * @constructor
  */
-BreakOut.BonusCoin = function (settings) {
+BreakOut.BonusShoot = function (settings) {
 
     BreakOut.Bonus.call(this, settings);
 
@@ -37,55 +37,68 @@ BreakOut.BonusCoin = function (settings) {
      * @type {string[]}
      */
     this.textures = [
-        'bonus-coin-001.png',
-        'bonus-coin-002.png',
-        'bonus-coin-003.png',
-        'bonus-coin-004.png',
-        'bonus-coin-005.png',
-        'bonus-coin-006.png',
-        'bonus-coin-007.png',
-        'bonus-coin-008.png',
-        'bonus-coin-009.png',
-        'bonus-coin-010.png',
-        'bonus-coin-011.png',
-        'bonus-coin-012.png',
-        'bonus-coin-013.png',
-        'bonus-coin-014.png',
-        'bonus-coin-015.png',
-        'bonus-coin-016.png'
+        'bonus-powerup-core-neutral.png'
     ];
+    this.childTexture = 'bonus-powerup-container-neutral.png';
+
+    /**
+     * Inner core
+     * @type {{}}
+     */
+    this.core = {};
 
     this.animationSpeed = 3;
 
-    this.score = 100;
+    this.effect = 'shoot';
 
-    this.color = 0xfff600;
+    this.color = 0xffff00;
+
+    this.particles = [];
 
 };
 
-BreakOut.BonusCoin.prototype = Object.create(BreakOut.Bonus.prototype);
+BreakOut.BonusShoot.prototype = Object.create(BreakOut.Bonus.prototype);
 
-BreakOut.BonusCoin.prototype.init = function (settings) {
+BreakOut.BonusShoot.prototype.init = function (settings) {
 
     BreakOut.Bonus.prototype.init.call(this, settings);
 
-    if (BreakOut.settings.lighting == true) {
-        var color = this.color;
-        this.light = new PIXI.lights.PointLight(color, .5, 32);
-        this.object.addChild(this.light);
+    if (BreakOut.settings.particles == true) {
+
+        for (var i = 0; i < 3; i++) {
+            var particle = new PIXI.Graphics();
+            particle.beginFill(this.color, 1);
+            particle.drawCircle(0, 0, 1 + Math.random() * 2);
+            particle.rotateRadius = 18 + Math.random() * 4;
+            particle.rotationSpeed = 6 + Math.random() * 4;
+            this.particles.push(particle);
+            this.object.addChild(particle);
+
+        }
     }
 
 };
 
-BreakOut.BonusCoin.prototype.update = function (time) {
+BreakOut.BonusShoot.prototype.update = function (time) {
 
     if (!BreakOut.Bonus.prototype.update.call(this, time)) {
         return false;
     }
+    this.core.rotation += .05;
+    this.object.rotation -= .05;
     // smoothly fade out light when reaching off the screen
     if (BreakOut.settings.lighting == true &&
         (this.object.position.y < 100 || this.object.position.y > BreakOut.settings.height - 100)) {
         this.light.brightness -= .005;
+    }
+    if (BreakOut.settings.particles == true) {
+
+        for (var i = 0; i < this.particles.length; i++) {
+            var particle = this.particles[i];
+            var particleRotationRadius = BreakOut.timer / particle.rotationSpeed;
+            particle.x = particle.rotateRadius * Math.cos(particleRotationRadius);
+            particle.y = particle.rotateRadius * Math.sin(particleRotationRadius);
+        }
     }
     return true;
 };

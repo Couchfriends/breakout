@@ -42,6 +42,8 @@ BreakOut.Ball = function (settings) {
 
     this.light = {};
 
+    this.damage = 1;
+
     this.stats = {
         damage: 1,
         radius: settings.radius || 8.5,
@@ -158,7 +160,7 @@ BreakOut.Ball.prototype.collision = function (target) {
     }
     //speed.y = addY;
     if (target.name == 'brick') {
-        target.damage(this);
+        target.damage(this.team, this.damage);
     }
 
     // Apply ball effects if needed

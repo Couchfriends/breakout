@@ -99,6 +99,16 @@ BreakOut.Paddle.prototype.shoot = function () {
         ball.setToMaxSpeed();
     }
     this.attachedBalls = [];
+
+    for (var i = 0; i < this.effects.length; i++) {
+        if (this.effects[i].effect == 'shoot') {
+            BreakOut.shoot(this.team, {
+                x: this.object.position.x - 10,
+                y: this.object.position.y
+            });
+            break;
+        }
+    }
 };
 
 BreakOut.Paddle.prototype.update = function (time) {

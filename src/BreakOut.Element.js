@@ -181,81 +181,26 @@ BreakOut.Element.prototype = {
 BreakOut.Element.prototype.applyEffect = function (effect, applyVisual) {
 
     applyVisual = applyVisual || false;
+    var timeouts = {
+        freeze: 320,
+        sticky: 1200,
+        fire: 400,
+        shoot: 320
+    };
     switch (effect) {
         case 'freeze':
-            var timeout = 320; // in fps
-            var effectObject = {
-                effect: 'freeze',
-                endTimer: BreakOut.timer + timeout,
-                object: ''
-            };
-            var found = false;
-            for (var i = 0; i < this.effects.length; i++) {
-                if (this.effects[i].effect == 'freeze') {
-                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
-                    effectObject.object = this.effects[i].object;
-                    if (effectObject.object != '') {
-                        effectObject.object.alpha = 1;
-                    }
-                    this.effects.splice(i, 1);
-                    found = true;
-                    break;
-                }
-            }
-            if (found == false && applyVisual) {
-                // add freezing effect
-                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-freeze.png');
-                var object = new PIXI.Sprite(texture);
-                object.alpha = 1;
-                object.anchor.x = .5;
-                object.anchor.y = .5;
-                effectObject.object = object;
-                this.object.addChild(object);
-            }
-            this.effects.push(effectObject);
-            break;
         case 'sticky':
-            var timeout = 1200; // in fps
-            var effectObject = {
-                effect: 'sticky',
-                endTimer: BreakOut.timer + timeout,
-                object: ''
-            };
-            var found = false;
-            for (var i = 0; i < this.effects.length; i++) {
-                if (this.effects[i].effect == 'sticky') {
-                    effectObject.endTimer = (this.effects[i].endTimer + timeout);
-                    effectObject.object = this.effects[i].object;
-                    if (effectObject.object != '') {
-                        effectObject.object.alpha = 1;
-                    }
-                    this.effects.splice(i, 1);
-                    found = true;
-                    break;
-                }
-            }
-            if (found == false && applyVisual) {
-                // add freezing effect
-                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-sticky.png');
-                var object = new PIXI.Sprite(texture);
-                object.alpha = 1;
-                object.anchor.x = .5;
-                object.anchor.y = .5;
-                effectObject.object = object;
-                this.object.addChild(object);
-            }
-            this.effects.push(effectObject);
-            break;
         case 'fire':
-            var timeout = 400; // in fps
+        case 'shoot':
+            var timeout = timeouts[effect]; // in fps
             var effectObject = {
-                effect: 'fire',
+                effect: effect,
                 endTimer: BreakOut.timer + timeout,
                 object: ''
             };
             var found = false;
             for (var i = 0; i < this.effects.length; i++) {
-                if (this.effects[i].effect == 'fire') {
+                if (this.effects[i].effect == effect) {
                     effectObject.endTimer = (this.effects[i].endTimer + timeout);
                     effectObject.object = this.effects[i].object;
                     if (effectObject.object != '') {
@@ -268,7 +213,7 @@ BreakOut.Element.prototype.applyEffect = function (effect, applyVisual) {
             }
             if (found == false && applyVisual) {
                 // add freezing effect
-                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-fire.png');
+                var texture = PIXI.Texture.fromImage(BreakOut.settings.assetDir + 'effect-' + effect + '.png');
                 var object = new PIXI.Sprite(texture);
                 object.alpha = 1;
                 object.anchor.x = .5;

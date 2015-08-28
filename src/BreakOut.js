@@ -102,7 +102,7 @@ var BreakOut = {
             }
             if (this.objects[i].object.position.x >= minX && this.objects[i].object.position.x <= maxX &&
                 this.objects[i].object.position.y >= minY && this.objects[i].object.position.y <= maxY) {
-                this.objects[i].damage(ball, Infinity);
+                this.objects[i].damage(ball.team, 1);
             }
         }
 
@@ -149,6 +149,19 @@ var BreakOut = {
                 this.sparkles[i].object.position.x = pos.x;
                 this.sparkles[i].object.position.y = pos.y;
                 this.sparkles[i].object.visible = true;
+                break;
+            }
+        }
+    },
+    bullets: [],
+    shoot: function (team, pos) {
+
+        for (var i = 0; i < this.bullets.length; i++) {
+            if (this.bullets[i].object.visible == false) {
+                this.bullets[i].team = team;
+                this.bullets[i].object.position.x = pos.x;
+                this.bullets[i].object.position.y = pos.y;
+                this.bullets[i].object.visible = true;
                 break;
             }
         }
@@ -236,6 +249,13 @@ var BreakOut = {
             explosion.init();
             explosion.add();
             BreakOut.explosions.push(explosion);
+        }
+
+        for (var i = 0; i < 20; i++) {
+            var bullet = new BreakOut.Bullet();
+            bullet.init();
+            bullet.add();
+            BreakOut.bullets.push(bullet);
         }
 
         for (var i = 0; i < 5; i++) {
