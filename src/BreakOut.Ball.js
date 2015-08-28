@@ -311,8 +311,8 @@ BreakOut.Ball.prototype.update = function (time) {
             speed.y = -speed.y;
             pos.y = (settings.height - radius);
             var removeScore = Math.floor(BreakOut.score.A * .5);
-            if (removeScore > 100) {
-                removeScore = 100;
+            if (removeScore > 50) {
+                removeScore = 50;
             }
             //BreakOut.score.A -= removeScore;
             BreakOut.addScore('A', -removeScore, {x: pos.x, y: pos.y});
@@ -322,8 +322,8 @@ BreakOut.Ball.prototype.update = function (time) {
             speed.y = Math.abs(speed.y);
             pos.y = radius;
             var removeScore = Math.floor(BreakOut.score.B * .5);
-            if (removeScore > 100) {
-                removeScore = 100;
+            if (removeScore > 50) {
+                removeScore = 50;
             }
             BreakOut.addScore('B', -removeScore, {x: pos.x, y: pos.y});
             //BreakOut.score.B -= removeScore;

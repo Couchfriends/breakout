@@ -36,6 +36,7 @@ BreakOut.BrickStone = function (settings) {
         'brick-stone-002.png',
         'brick-stone-003.png'
     ];
+    this.score = 50;
 };
 
 BreakOut.BrickStone.prototype = Object.create(BreakOut.Brick.prototype);
