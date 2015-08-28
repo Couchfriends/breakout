@@ -28,7 +28,7 @@ var BreakOut = {
      * Game width and height
      */
     settings: {
-        debug: false,
+        debug: (window.location.hash.indexOf('debug') >= 0),
         width: 1280,
         height: 720,
         assetDir: 'assets/',

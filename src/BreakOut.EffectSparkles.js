@@ -53,7 +53,7 @@ BreakOut.EffectSparkles.prototype.init = function (settings) {
     for (var i = 0; i < 5; i++) {
         var child = new PIXI.Graphics();
         child.beginFill(0xffffff, 1);
-        child.drawCircle(0, 0, Math.random() * 2);
+        child.drawCircle(0, 0, Math.random() * 5);
         child.speedX = -2 + (Math.random() * 4);
         child.speedY = -2 + (Math.random() * 4);
 
