@@ -168,8 +168,8 @@ var BreakOut = {
     },
     init: function () {
 
-        var backgroundWidth = 256;
-        var backgroundHeight = 256;
+        var backgroundWidth = 122;
+        var backgroundHeight = 119;
         for (var x = 0; x < this.settings.width; x += backgroundWidth) {
 
             for (var y = 0; y < this.settings.height; y += backgroundHeight) {

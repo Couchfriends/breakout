@@ -36,8 +36,12 @@ BreakOut.AssetBackground = function (settings) {
     settings = settings || {};
     //settings.texture = settings.texture || 'tiled-background.png';
     //settings.normalTexture = settings.normalTexture || 'tiled-background-normal.png';
-    settings.texture = settings.texture || 'background.png';
-    settings.normalTexture = settings.normalTexture || 'background-normal.png';
+    //settings.texture = settings.texture || 'background.png';
+    //settings.normalTexture = settings.normalTexture || 'background-normal.png';
+    //settings.texture = settings.texture || 'tumblr_nttodhSDts1qm4qbbo1_1280.png';
+    //settings.normalTexture = settings.normalTexture || 'tumblr_nttodhSDts1qm4qbbo1_1280-normal.png';
+    settings.texture = settings.texture || 'background-self.png';
+    settings.normalTexture = settings.normalTexture || 'background-self-normal.png';
 
     this.texture = settings.texture;
     this.normalTexture = settings.normalTexture;
