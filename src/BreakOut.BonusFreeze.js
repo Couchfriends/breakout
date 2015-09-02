@@ -55,6 +55,8 @@ BreakOut.BonusFreeze = function (settings) {
 
     this.particles = [];
 
+    this.soundEffect = 'pickup-wrong';
+
 };
 
 BreakOut.BonusFreeze.prototype = Object.create(BreakOut.Bonus.prototype);

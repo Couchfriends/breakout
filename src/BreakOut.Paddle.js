@@ -106,6 +106,7 @@ BreakOut.Paddle.prototype.shoot = function () {
                 x: this.object.position.x - 10,
                 y: this.object.position.y
             });
+            sounds['shoot'].play();
             break;
         }
     }

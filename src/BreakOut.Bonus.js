@@ -69,6 +69,8 @@ BreakOut.Bonus = function (settings) {
     // Effect to apply on paddle
     this.effect = '';
 
+    this.soundEffect = 'pickup';
+
 };
 
 BreakOut.Bonus.prototype = Object.create(BreakOut.Element.prototype);
@@ -121,6 +123,9 @@ BreakOut.Bonus.prototype.update = function (time) {
 
 BreakOut.Bonus.prototype.collision = function (target) {
     if (target.name == 'paddle') {
+        if (sounds[this.soundEffect] != null) {
+            sounds[this.soundEffect].play();
+        }
         if (this.score > 0) {
             BreakOut.addScore(this.team, this.score, this.object.position);
         }

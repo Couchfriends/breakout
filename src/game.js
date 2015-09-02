@@ -32,13 +32,65 @@ if (typeof BreakOut == 'undefined') {
 var renderer, stage, players = [], tmpPlayer = '', mousePos = {
     x: 0,
     y: 0
-}, light = {}, mouseHideTimeOut;
+    }, light = {}, mouseHideTimeOut, sounds = {},
+    soundFiles = [];
+
+soundFiles.push(
+    {
+        key: 'background',
+        src: 'Prop - Basic Pleasure.mp3',
+        volume: .5,
+        loop: true,
+        autoplay: true
+    },
+    {
+        key: 'coin',
+        src: 'sound-effect-coin.wav'
+    },
+    {
+        key: 'pickup',
+        src: 'sound-effect-pickup.mp3',
+        volume: 2
+    },
+    {
+        key: 'pickup-wrong',
+        src: 'sound-effect-pickup-negative.mp3'
+    },
+    {
+        key: 'explosion',
+        src: 'sound-effect-explosion.wav',
+        volume: .5
+    },
+    {
+        key: 'shoot',
+        src: 'sound-effect-shoot.mp3',
+        volume: .2
+    },
+    {
+        key: 'next-level',
+        src: 'sound-effect-winner.mp3'
+    }
+);
 
 function hideCursor() {
     document.body.style.cursor = 'url(assets/empty-cursor.png), auto';
 }
 window.onload = init;
 function init() {
+
+    // Load sound effects
+    for (var i = 0; i < soundFiles.length; i++) {
+        var sound = soundFiles[i];
+        sounds[sound.key] = new Howl(
+            {
+                src: BreakOut.settings.assetDir + sound.src,
+                autoplay: sound.autoplay || false,
+                volume: sound.volume || 1,
+                loop: sound.loop || false
+            }
+        )
+    }
+
     mouseHideTimeOut = setTimeout(hideCursor, 2000);
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 800);
     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 600);

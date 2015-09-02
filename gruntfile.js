@@ -9,6 +9,7 @@ module.exports = function(grunt) {
             },
             build: {
                 src: [
+                    'src/howler.js',
                     'src/pixi.js',
                     'src/pixi.lights.js',
                     'src/lib.js',

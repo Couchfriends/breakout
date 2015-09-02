@@ -61,6 +61,8 @@ BreakOut.BonusCoin = function (settings) {
 
     this.color = 0xfff600;
 
+    this.soundEffect = 'coin';
+
 };
 
 BreakOut.BonusCoin.prototype = Object.create(BreakOut.Bonus.prototype);

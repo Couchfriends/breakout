@@ -7,4 +7,6 @@ Breakout multiplayer game
 `npm install` & `grunt` or open the build/index.html in your browser
 
 ### Thanks to
-opengameart.org for the ideas!
+* [Opengameart](http://www.opengameart.org) for the ideas and resources.
+* [Kenney Vleugels](http://www.www.kenney.nl) - Sound Effects
+* Prop - Background music

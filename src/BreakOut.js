@@ -111,6 +111,7 @@ var BreakOut = {
                 this.explosions[i].object.position.x = pos.x;
                 this.explosions[i].object.position.y = pos.y;
                 this.explosions[i].object.visible = true;
+                sounds['explosion'].play();
                 break;
             }
         }
@@ -352,6 +353,8 @@ var BreakOut = {
         var file = this.levels[this.currentLevel];
         ajax(BreakOut.settings.assetDir + file, function (jsonData) {
             jsonData = JSON.parse(jsonData);
+
+            sounds['next-level'].play();
 
             var tileWidth = jsonData.tilewidth;
             var tileHeight = jsonData.tileheight;
