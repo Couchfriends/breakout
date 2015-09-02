@@ -8,5 +8,5 @@ Breakout multiplayer game
 
 ### Thanks to
 * [Opengameart](http://www.opengameart.org) for the ideas and resources.
-* [Kenney Vleugels](http://www.www.kenney.nl) - Sound Effects
+* [Kenney Vleugels](http://www.kenney.nl) - Sound Effects
 * Prop - Background music
