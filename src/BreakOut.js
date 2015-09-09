@@ -40,6 +40,7 @@ var BreakOut = {
         A: 0,
         B: 0
     },
+    firstLevelLoaded: false,
     players: [],
     timer: 0,
     objects: [],
@@ -354,7 +355,10 @@ var BreakOut = {
         ajax(BreakOut.settings.assetDir + file, function (jsonData) {
             jsonData = JSON.parse(jsonData);
 
-            sounds['next-level'].play();
+            if (BreakOut.firstLevelLoaded == true) {
+                sounds['next-level'].play();
+            }
+            BreakOut.firstLevelLoaded = true;
 
             var tileWidth = jsonData.tilewidth;
             var tileHeight = jsonData.tileheight;

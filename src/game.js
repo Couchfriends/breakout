@@ -160,6 +160,17 @@ COUCHFRIENDS.on('playerJoined', function (data) {
         }
     };
     COUCHFRIENDS.send(jsonData);
+
+    var jsonData = {
+        topic: 'interface',
+        action: 'buttonAdd',
+        data: {
+            playerId: data.id,
+            color: '#ff0000',
+            id: 'buttonShoot'
+        }
+    };
+    COUCHFRIENDS.send(jsonData);
 });
 
 COUCHFRIENDS.on('playerOrientation', function (data) {
@@ -167,7 +178,7 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == data.id) {
-            var x = data.x * 40;
+            var x = data.x * 30;
             players[i].element.setSpeed(x);
             return;
         }
@@ -175,17 +186,19 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
 
 });
 
-COUCHFRIENDS.on('playerClick', function (data) {
-
+var shoot = function (data) {
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
-        if (players[i].id == data.id) {
+        if (players[i].id == data.playerId) {
             players[i].element.shoot();
             return;
         }
     }
 
-});
+};
+
+COUCHFRIENDS.on('buttonClick', shoot);
+COUCHFRIENDS.on('playerClick', shoot);
 
 function vibrate(team, duration) {
     duration = duration || 200;
