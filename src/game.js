@@ -97,6 +97,7 @@ function init() {
     BreakOut.settings.width = w;
     BreakOut.settings.height = h;
 
+    PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
     renderer = new PIXI.lights.WebGLDeferredRenderer(w, h, {transparent: true});
 
     stage = new PIXI.Container();
@@ -178,7 +179,7 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == data.id) {
-            var x = data.x * 30;
+            var x = data.x * 20;
             players[i].element.setSpeed(x);
             return;
         }
@@ -187,9 +188,13 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
 });
 
 var shoot = function (data) {
+    var playerId = data.id;
+    if (data.playerId != 'undefined') {
+        playerId = data.playerId;
+    }
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
-        if (players[i].id == data.playerId) {
+        if (players[i].id == playerId) {
             players[i].element.shoot();
             return;
         }
@@ -198,7 +203,7 @@ var shoot = function (data) {
 };
 
 COUCHFRIENDS.on('buttonClick', shoot);
-COUCHFRIENDS.on('playerClick', shoot);
+COUCHFRIENDS.on('playerClickUp', shoot);
 
 function vibrate(team, duration) {
     duration = duration || 200;
