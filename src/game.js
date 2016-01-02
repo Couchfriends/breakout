@@ -204,6 +204,7 @@ var shoot = function (data) {
 
 COUCHFRIENDS.on('buttonClick', shoot);
 COUCHFRIENDS.on('playerClickUp', shoot);
+COUCHFRIENDS.on('buttonUp', shoot);
 
 function vibrate(team, duration) {
     duration = duration || 200;
