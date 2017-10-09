@@ -72,17 +72,47 @@ module.exports = function(grunt) {
                 expand: true,
                 filter: 'isFile'
             }
+        },
+        watch: {
+            files: [
+                'src/**/*.js',
+                'src/**/*.less'
+            ],
+            tasks: ['build']
+        },
+        browserSync: {
+            dev: {
+                bsFiles: {
+                    src: [
+                        'build/**/*.css',
+                        'build/**/*.js',
+                        'build/index.html'
+                    ]
+                },
+                options: {
+                    watchTask: true,
+                    server: {
+                        baseDir: './build'
+                    }
+                }
+            }
         }
     });
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    // Default task(s).
-    grunt.registerTask('default', ['uglify', 'less', 'copy']);
-
     grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.loadNpmTasks('grunt-contrib-copy');
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
+
+    grunt.loadNpmTasks('grunt-browser-sync');
+
+    // Default task(s).
+    grunt.registerTask('default', ['browserSync', 'watch'])
+
+    grunt.registerTask('build', ['uglify', 'less', 'copy']);
 
 };
