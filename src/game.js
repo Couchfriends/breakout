@@ -150,11 +150,14 @@ COUCHFRIENDS.on('connect', function () {
     COUCHFRIENDS.send(jsonData);
 });
 
-COUCHFRIENDS.on('playerJoined', function (data) {
+COUCHFRIENDS.on('player.join', function (data) {
     var player = BreakOut.addPlayer(data.id);
+    console.log(player);
     var jsonData = {
+        id: data.id,
         topic: 'player',
         action: 'identify',
+        type: 'player.identify',
         data: {
             id: data.id,
             color: player.color
@@ -163,6 +166,7 @@ COUCHFRIENDS.on('playerJoined', function (data) {
     COUCHFRIENDS.send(jsonData);
 
     var jsonData = {
+        id: data.id,
         topic: 'interface',
         action: 'buttonAdd',
         data: {
@@ -174,11 +178,10 @@ COUCHFRIENDS.on('playerJoined', function (data) {
     COUCHFRIENDS.send(jsonData);
 });
 
-COUCHFRIENDS.on('playerOrientation', function (data) {
-
+COUCHFRIENDS.on('player.orientation', function (data) {
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
-        if (players[i].id == data.id) {
+        if (players[i].id == data.player.id) {
             var x = data.x * 20;
             players[i].element.setSpeed(x);
             return;
@@ -188,10 +191,7 @@ COUCHFRIENDS.on('playerOrientation', function (data) {
 });
 
 var shoot = function (data) {
-    var playerId = data.id;
-    if (data.playerId != 'undefined') {
-        playerId = data.playerId;
-    }
+    var playerId = data.player.id;
     var players = BreakOut.players;
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == playerId) {
@@ -202,9 +202,9 @@ var shoot = function (data) {
 
 };
 
-COUCHFRIENDS.on('buttonClick', shoot);
-COUCHFRIENDS.on('playerClickUp', shoot);
-COUCHFRIENDS.on('buttonUp', shoot);
+COUCHFRIENDS.on('button.click', shoot);
+COUCHFRIENDS.on('player.clickUp', shoot);
+COUCHFRIENDS.on('player.buttonUp', shoot);
 
 function vibrate(team, duration) {
     duration = duration || 200;
@@ -215,6 +215,7 @@ function vibrate(team, duration) {
         var jsonData = {
             topic: 'interface',
             action: 'vibrate',
+            type: 'interface.vibrate',
             data: {
                 playerId: BreakOut.players[i].id,
                 duration: duration
@@ -224,8 +225,8 @@ function vibrate(team, duration) {
     }
 }
 
-COUCHFRIENDS.on('playerLeft', function (data) {
-    BreakOut.removePlayer(data.id);
+COUCHFRIENDS.on('player.left', function (data) {
+    BreakOut.removePlayer(data.player.id);
 });
 
 function update(time) {
